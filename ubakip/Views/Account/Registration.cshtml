@@ -1,0 +1,35 @@
+﻿@model  ubakip.Models.Users
+@{
+    ViewBag.Title = "SIGN UP";
+}
+
+<link href="~/Content/custom.css" rel="stylesheet" />
+
+@Html.ValidationSummary(true)
+
+<div class="container">
+    <div class="row destacados">
+        <div class="col-md-offset-4 col-md-4">
+            <div class="box1">
+                <h3>SIGN UP</h3>
+                @using (Html.BeginForm())
+                {
+                    <div class="form-group">
+                        @Html.EditorFor(u => u.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+                    </div>
+                    <div class="form-group">
+                        @Html.EditorFor(u => u.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password" } })
+                    </div>
+                    <div class="form-group">
+                        @Html.EditorFor(u => u.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Displaying Name" } })
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <button class="btn btn-info" type="submit">SIGN UP</button>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

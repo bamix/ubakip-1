@@ -1,0 +1,162 @@
+﻿body {
+    background-image: url("Images/bg.jpg");
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+@font-face {
+    font-family: 'BuxtonSketch';
+    src: url('../fonts/BuxtonSketch.eot');
+    src: local('BuxtonSketch'), url('../fonts/BuxtonSketch.woff') format('woff'), url('../fonts/BuxtonSketch.ttf') format('truetype');
+}
+
+.navbar {
+    border-bottom-left-radius: 20px 20px;
+    border-bottom-right-radius: 20px 20px;
+}
+
+.navbar-inverse {
+    background-color: #f97f29;
+    border-color: #f97f29;
+}
+
+.navbar-brand {
+    font-size: 36px;
+    font-family: BuxtonSketch;
+}
+
+#usrlbl{
+    font-family: cursive;
+    font-size: larger;
+    border: 1px dashed;
+    border-color: black;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #0f0f0f;
+    background-color: #dcb600;
+    border-bottom-left-radius: 20px 20px;
+    border-bottom-right-radius: 20px 20px;
+    box-shadow: 2px 2px 5px #888888;
+}
+
+    .navbar-inverse .navbar-brand:hover {
+        color: #fff;
+    }
+
+.navbar-inverse .nav > li > a {
+    color: black;
+    font-family: Britannic;
+    font-size: large;
+}
+
+.navtext {
+    color: black;
+    font-family: Britannic;
+    font-size: large;
+    text-align: match-parent;
+    box-sizing: border-box;
+    position: relative;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    line-height: 20px;
+}
+
+.btn-success {
+    background-color: #3B3738;
+    border: none;
+}
+
+    .btn-success:hover {
+        background-color: #fff;
+        color: black;
+    }
+
+#login-dp {
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow: hidden;
+    background-color: rgba(255,255,255,1);
+}
+
+    #login-dp .help-block {
+        font-size: 12px;
+    }
+
+    #login-dp .bottom {
+        background-color: rgba(255,255,255,.8);
+        border-top: 1px solid #ddd;
+        clear: both;
+        padding: 14px;
+    }
+
+    #login-dp .social-buttons {
+        margin: 12px 0;
+    }
+
+        #login-dp .social-buttons a {
+            width: 49%;
+        }
+
+    #login-dp .form-group {
+        margin-bottom: 10px;
+    }
+
+.btn-fb {
+    color: #fff;
+    background-color: #3b5998;
+}
+
+    .btn-fb:hover {
+        color: #fff;
+        background-color: #496ebc;
+    }
+
+.btn-tw {
+    color: #fff;
+    background-color: #55acee;
+}
+
+    .btn-tw:hover {
+        color: #fff;
+        background-color: #59b5fa;
+    }
+
+@media(max-width: 768px) {
+    .navtext {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    #login-dp {
+        background-color: inherit;
+        color: #fff;
+    }
+
+        #login-dp .bottom {
+            background-color: inherit;
+            border-top: 0 none;
+        }
+}

@@ -1,0 +1,348 @@
+﻿.content {
+}
+
+.sidebar {
+    /*border:solid;
+    border-width:1px;
+    border-color: black;
+    border-radius:10px;*/
+    padding-top: 1%;
+    margin: auto;
+}
+
+    .sidebar .list-group-item {
+        padding: 5px;
+    }
+
+.mpaa-image {
+    height: 30px;
+    margin-left: 10px;
+}
+
+.post-info {
+    margin: 1%;
+}
+
+    .post-info h2 {
+        margin: auto;
+    }
+
+.avatar {
+    width: 90%;
+    margin-top: 10%;
+    padding: 0;
+}
+
+.avatar-div {
+    padding: 0;
+}
+
+.non-padding {
+    margin: 0px;
+    padding: 0px;
+}
+
+.post-preview {
+    margin: 2%;
+}
+
+.post-header {
+    background: #c6c6c6;
+    padding: 0px;
+    margin: 0px;
+    border-bottom: dashed;
+    border-width: 2px;
+}
+
+.tags-container {
+    margin: 2%;
+    color: green;
+}
+
+.tag {
+    margin: 0.1%;
+    background: #9c9999;
+    padding-left: 5%;
+    padding-right: 5%;
+    display: inline-block;
+    border: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 10px;
+    color: green;
+}
+
+    .tag a {
+        color: black;
+    }
+
+.tags-container .tag {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.tag:hover {
+    background: #cccccc;
+}
+
+.tag-li {
+    display: initial;
+    margin: 1%;
+}
+
+.post {
+    border: dashed;
+    border-color: transparent;
+    border-radius: 10px;
+    border-width: 0px;
+    background: #e9e9e9;
+    padding: 0px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 2%;
+}
+
+
+.user-avatar {
+    margin-top: 2%;
+}
+
+.user-info {
+}
+
+div.user-rating {
+    width: 35%;
+    display: inline-block;
+}
+
+.temp {
+}
+
+.medal {
+    display: inline-block;
+    width: 10%;
+    margin: 1%;
+}
+
+    .medal img {
+        width: 100%;
+    }
+
+.medals-container {
+    display: inline-block;
+}
+
+.comment-container {
+}
+
+.comment {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin-top: 2%;
+    padding: 1%;
+    border: solid;
+    border-color: transparent;
+    border-radius: 10%;
+    overflow: hidden;
+}
+
+.comment-info {
+    border-right: dashed;
+    border-color: black;
+    border-width: 0.4vmin;
+    height: 100%;
+    text-align: center;
+}
+
+    .comment-info .avatar-div {
+        margin: auto;
+        width: 80%;
+    }
+
+.comment-text {
+}
+
+@media only screen and (min-width: 1024px) {
+    .sidebar {
+        /*border:solid;
+    border-width:1px;
+    border-color: black;
+    border-radius:10px;*/
+        padding-top: 20%;
+    }
+
+        .sidebar .badge {
+            float: right;
+        }
+
+    .tag-li {
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+.search-form .form-group {
+    float: right;
+    /*transition: all 0.35s, border-radius 0s;*/
+    /*width: 32px;*/
+    width: 100%;
+    margin-left: auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    height: 32px;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+}
+
+    .search-form .form-group input.form-control {
+        padding-right: 20px;
+        border: 0 none;
+        background: transparent;
+        box-shadow: none;
+        display: block;
+    }
+
+        .search-form .form-group input.form-control::-webkit-input-placeholder {
+        }
+
+        .search-form .form-group input.form-control:-moz-placeholder {
+            /* Firefox 18- */
+        }
+
+        .search-form .form-group input.form-control::-moz-placeholder {
+            /* Firefox 19+ */
+        }
+
+        .search-form .form-group input.form-control:-ms-input-placeholder {
+        }
+
+    .search-form .form-group:hover,
+    .search-form .form-group.hover {
+        width: 100%;
+        border-radius: 25px 25px 25px 25px;
+    }
+
+    .search-form .form-group span.form-control-feedback {
+        position: absolute;
+        top: -1px;
+        right: -2px;
+        z-index: 2;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+        color: #3596e0;
+        font-size: 14px;
+    }
+
+.pages-container {
+}
+
+.page-preview {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    margin: 2%;
+    background: #818181;
+    padding: 0.5%;
+    border: dashed;
+    border-radius: 10px;
+}
+
+    .page-preview .img-responsive {
+        max-height: 100%;
+    }
+
+/*Here is Ribbon Labels*/
+
+.destacados {
+    padding: 70px 0;
+    text-align: center;
+}
+
+.box1 {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid rgb(200, 200, 200);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px 2px;
+    background: #E4C054;
+    border-radius: 4px;
+}
+
+.box1 h3 {
+    position: relative;
+    padding: 10px 30px;
+    margin: 0 -30px 20px;
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background: #cc0000;
+
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+
+    zoom: 1;
+}
+
+.box1 h3:before, .box1 h3:after {
+    content: "";
+    position: absolute;
+
+    z-index: -1;
+    top: 100%;
+    left: 0;
+    border-width: 0 10px 10px 0;
+    border-style: solid;
+    border-color: transparent maroon;
+}
+
+.box1 h3:after {
+    left: auto;
+    right: 0;
+    border-width: 0 0 10px 10px;
+}
+
+.box1 h4 {
+    position: relative;
+    padding: 10px 30px;
+    margin: 0 -30px 20px;
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background: #87A800;
+
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+
+    zoom: 1;
+}
+
+.box1 h4:before, .box1 h4:after {
+    content: "";
+    position: absolute;
+
+    z-index: -1;
+    top: 100%;
+    left: 0;
+    border-width: 0 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #647D01;
+}
+
+.box1 h4:after {
+    left: auto;
+    right: 0;
+    border-width: 0 0 10px 10px;
+}
