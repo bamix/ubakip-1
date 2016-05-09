@@ -145,6 +145,7 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="CustomLibraries\CustomDecrypt.cs" />
     <Compile Include="CustomLibraries\CustomEncrypt.cs" />
     <Compile Include="Global.asax.cs">
@@ -153,6 +154,7 @@
     <Compile Include="MainDbContext.cs" />
     <Compile Include="Models\Comix.cs" />
     <Compile Include="Models\ComixTag.cs" />
+    <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -198,12 +200,15 @@
     <Content Include="Views\Home\AdminPanel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Registration.cshtml" />
-    <Content Include="Views\Account\UserPage.cshtml" />
-    <Content Include="Views\Account\UserInfo.cshtml" />
+    <Content Include="Views\Account\UserInfo1.cshtml" />
+    <Content Include="Views\UserInfo\Comments.cshtml" />
+    <Content Include="Views\UserInfo\Index.cshtml" />
+    <Content Include="Views\UserInfo\_CommentsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

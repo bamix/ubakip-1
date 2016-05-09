@@ -48,11 +48,10 @@
                 </ul>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-
                         @if (@User.Identity.IsAuthenticated)
                         {
                             <li><a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a></li>
-                            <li>@Html.ActionLink(@User.Identity.Name, "Index", "Home", new { area = "" }, new { @id = "usrlbl" })</li>
+                            <li>@Html.ActionLink(@User.Identity.Name, "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
                             <li><a href="@Url.Action("Logout", "Account")">Log Out</a></li>
                         }
                         else

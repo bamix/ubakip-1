@@ -14,5 +14,7 @@ namespace ubakip
         {
         }
         public DbSet<Users> Users { get; set; }
+        public DbSet<Comments> Comments { get; set; }
+
     }
 }
