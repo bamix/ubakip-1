@@ -23,5 +23,7 @@ namespace ubakip.Models
         public string Name { get; set; }
 
         public int Role { get; set; }
+
+        public string Lang { get; set; }
     }
 }

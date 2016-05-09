@@ -91,6 +91,8 @@ namespace ubakip.Controllers
                         user.Email = model.Email;
                         user.Password = encryptedPassword;
                         user.Name = model.Name;
+                        user.Role = 1;
+                        user.Lang = "RU";
                         db.Users.Add(user);
                         db.SaveChanges();
                         return RedirectToAction("Index", "Home");
