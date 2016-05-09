@@ -35,7 +35,6 @@ namespace ubakip.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "Error creating a comment. Read posting conditions.";
                         return RedirectToAction("Index", "UserInfo");
                     }
                 }
