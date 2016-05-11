@@ -144,7 +144,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ComixController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JavaScriptConverterController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="CustomLibraries\CustomDecrypt.cs" />
     <Compile Include="CustomLibraries\CustomEncrypt.cs" />
@@ -152,9 +154,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="MainDbContext.cs" />
+    <Compile Include="Models\Cloud.cs" />
     <Compile Include="Models\Comix.cs" />
     <Compile Include="Models\ComixTag.cs" />
     <Compile Include="Models\Comments.cs" />
+    <Compile Include="Models\ImageCell.cs" />
+    <Compile Include="Models\Medal.cs" />
+    <Compile Include="Models\MPAARating.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,12 +171,35 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\custom.css" />
+    <Content Include="Content\Images\backgroundcell.jpg" />
     <Content Include="Content\Images\bg.jpg" />
+    <Content Include="Content\Images\cloud1.png" />
+    <Content Include="Content\Images\cloud2.png" />
+    <Content Include="Content\Images\cloud3.png" />
+    <Content Include="Content\Images\cloud4.png" />
+    <Content Include="Content\Images\cloud5.png" />
+    <Content Include="Content\Images\cloud6.png" />
+    <Content Include="Content\Images\cloud7.png" />
+    <Content Include="Content\Images\medal.png" />
+    <Content Include="Content\Images\pause.png" />
+    <Content Include="Content\Images\play.png" />
+    <Content Include="Content\Images\template1.jpg" />
+    <Content Include="Content\Images\template2.jpg" />
+    <Content Include="Content\Images\template3.jpg" />
+    <Content Include="Content\Images\template4.jpg" />
+    <Content Include="Content\Images\template5.jpg" />
+    <Content Include="Content\Images\template6.jpg" />
+    <Content Include="Content\Images\template7.jpg" />
+    <Content Include="Content\ngDialog-theme-default.min.css" />
+    <Content Include="Content\ngDialog.min.css" />
     <Content Include="Content\rating.css" />
+    <Content Include="Content\slider.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="fonts\BuxtonSketch.eot" />
     <Content Include="fonts\BuxtonSketch.ttf" />
@@ -176,15 +208,26 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\comment.js" />
+    <Content Include="Scripts\drag-and-drop-pages.js" />
+    <Content Include="Scripts\interact.js" />
+    <Content Include="Scripts\interact.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jscolor.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\ngDialog.js" />
+    <Content Include="Scripts\ngDialog.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\comixMaker.js" />
     <Content Include="Scripts\Sortable.js" />
+    <Content Include="Scripts\sortable.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -204,11 +247,18 @@
     <Content Include="Views\UserInfo\Comments.cshtml" />
     <Content Include="Views\UserInfo\Index.cshtml" />
     <Content Include="Views\UserInfo\_CommentsPartial.cshtml" />
+    <Content Include="Views\Comix\ComixMaker.cshtml" />
+    <Content Include="Views\Comix\Index.cshtml" />
+    <Content Include="Views\Home\UserInfo.cshtml" />
+    <Content Include="Views\Home\PostLayout.cshtml" />
+    <Content Include="Views\Shared\MedalPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Shared\templates\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

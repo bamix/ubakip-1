@@ -1,0 +1,45 @@
+﻿@model ubakip.Models.Page
+@{
+    ViewBag.Title = "ComixMaker";
+}
+@Scripts.Render("~/bundles/interact")
+<script src="~/Scripts/ngDialog.min.js"></script>
+<script src="~/Scripts/comixMaker.js"></script>
+<script src="~/Scripts/jscolor.min.js"></script>
+
+<div class="row margin-auto" ng-controller="comicsMakerController" ng-cloak="" ng-app="MyApp"
+     ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model))'>
+    <div class="col-md-8">
+        <div class="wrapper">
+            <div class="main-form center-block" id="main-form" style="background:#{{background}}">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" >
+        <div class="tools-container">
+            <button type="button" id="save" class="btn  btn-block btn-success" style="">Save</button>
+            <span>Layouts:</span><br />
+            <button type="button" id="template1" class="btn btn-template" style="background-image:url(../../Content/Images/template1.jpg)"></button>
+            <button type="button" id="template2" class="btn btn-template" style="background-image:url(../../Content/Images/template2.jpg)"></button>
+            <button type="button" id="template3" class="btn btn-template" style="background-image:url(../../Content/Images/template3.jpg)"></button>
+            <button type="button" id="template4" class="btn btn-template" style="background-image:url(../../Content/Images/template4.jpg)"></button>
+            <button type="button" id="template5" class="btn btn-template" style="background-image:url(../../Content/Images/template5.jpg)"></button>
+            <button type="button" id="template6" class="btn btn-template" style="background-image:url(../../Content/Images/template6.jpg)"></button>
+            <button type="button" id="template7" class="btn btn-template" style="background-image:url(../../Content/Images/template7.jpg)"></button>
+            <br />
+            <span>Clouds:</span><br />
+            <button type="button" id="cloud1" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud1.png)"></button>
+            <button type="button" id="cloud2" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud2.png)"></button>
+            <button type="button" id="cloud3" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud3.png)"></button>
+            <button type="button" id="cloud4" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud4.png)"></button>
+            <button type="button" id="cloud5" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud5.png)"></button>
+            <button type="button" id="cloud6" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud6.png)"></button>
+            <button type="button" id="cloud7" class="btn btn-cloud" style="background-image:url(../../Content/Images/cloud7.png)"></button><br>
+            <span> Background color: <input class="jscolor" ng-model="background"></span>      <br />
+            Rotate: 
+            <div class="con"><div id="slider_rotate" class="slider"></div></div>
+            Scale:
+            <div class="con"><div id="slider_scale" class="slider"></div></div>
+        </div>  
+    </div>
+</div>

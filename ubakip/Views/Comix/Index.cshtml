@@ -1,0 +1,17 @@
+﻿@model ubakip.Models.Post
+
+<div ng-app="sortableApp" ng-controller="sortableController as pageList" ng-init='pageList.Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Pages))'>
+    <h2 >@Model.Name</h2>
+    <script src="~/Scripts/drag-and-drop-pages.js"></script>
+    <script src="~/Scripts/sortable.min.js"></script>
+    <div class="pages-container"  ui-sortable="sortableOptions"  ng-model="pageList.pages" >
+
+        <div class="page-preview list-group-item"  ng-repeat="page in pageList.pages" >
+            <img class="img-responsive center-block" ng-src={{page.preview}}>
+        </div>
+
+    </div>
+</div>
+
+
+

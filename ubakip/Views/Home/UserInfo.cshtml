@@ -1,0 +1,77 @@
+﻿@model ubakip.Models.UserInfo
+
+
+<div class="row">
+    <div class="col-md-3 user-avatar">
+        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Nickname /></a> 
+        </div>
+    <div class="col-md-9 user-info">
+        <h1>@Model.FirstName @Model.LastName</h1>
+         @@@Model.User.Nickname
+        <h4>
+            Rating:
+        </h4>
+        <div class="user-rating">         
+                <form action="">
+                    @{  int averageRaring = (int)Math.Round(Model.Rating);
+                        for (int i = 5; i >= 1; i--)
+                        {
+                            string Star = "star-" + i.ToString();
+                            string Class = "star userchecked";
+                            string Checked = "";
+                            if (i == averageRaring) { Checked = "checked"; }
+                            <input class="@Class" id=@Star type="radio" name="star" @Checked disabled readonly/>
+                            <label class="@Class" for=@Star></label>
+                        }
+                    }
+                </form>         
+</div>
+        <h4> Medals:</h4>
+        <div class="medals-container">
+    @{
+        foreach (var m in Model.Medals)
+        {
+            Html.RenderPartial("MedalPartial", m);
+        }
+     }
+    </div>
+    
+        <h4>About:</h4>
+            @Model.About
+</div>
+</div>
+
+<div class="comment-editor" ng-app="CommentApp" ng-controller="CommentListController as commentList" >
+    <script src="~/Scripts/comment.js"></script>
+      
+        <form ng-submit="commentList.addComment()"
+              ng-init='commentList.Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Comments))'>
+            <input type="text" ng-model="commentList.commentText" size="30"
+                   placeholder="add new comment">
+            <input class="btn-primary" type="submit" value="add">
+        </form>    
+     <div class="comment-container"  ng-repeat="comment in commentList.comments">
+            <div class="comment">
+                <div class="row">
+                    <div class="col-xs-2 comment-info">
+                        <div class="avatar-div ">
+                            <img ng-src={{comment.fromUser.photo}} class="img-circle avatar center-block" />
+                        </div>
+                        <a href="#"> {{comment.fromUser.nickname}}</a>
+                    </div>
+                    <div class="col-xs-10 comment-text">
+                        {{comment.text}}
+                    </div>
+                </div>
+            </div>
+     </div>
+</div>
+
+   
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+

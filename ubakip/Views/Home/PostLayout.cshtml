@@ -1,0 +1,63 @@
+﻿@model ubakip.Models.Post
+
+<div class="post">
+    <div class="row post-header">
+        <div class="col-xs-1 avatar-div">
+            <a href="#"> <img src=@Model.Author.Photo class="img-circle avatar center-block" alt=@Model.Author.Nickname /></a>
+        </div>
+        <div class="col-xs-7 non-padding">
+            <div class="post-info">
+                <h2>
+                    <a href="#">@Model.Name</a>
+                    <img src=@Model.MPAARating.Photo class="mpaa-image" alt=@Model.MPAARating.Description title=@Model.MPAARating.Description />
+                </h2>
+                <a href="#">@Model.Author.Nickname</a> | @Model.CreateTime
+            </div>
+        </div>
+        <div class="col-xs-4 rating">
+           
+            <form action="">
+                @{ string userchecked = "";
+                    if (Model.UserRating != 0) { userchecked = " userchecked"; }}
+                <div class="stars @userchecked">
+                    @{
+                        for (int i = 5; i >= 1; i--)
+                        {
+                            string Star = "star-" + i.ToString();
+                            string Class = "star " + Star;
+                            int averageRating = (int)Math.Round(Model.Rating);
+                            if (Model.UserRating != 0) { averageRating = (int)Model.UserRating; }
+                            string Checked = "";
+                            string Id = Model.Id.ToString() + "-" + i.ToString();
+                            if (i == averageRating) { Checked = "checked"; }
+                            <input class="@Class" id=@Id @Checked type="radio" data-id=@Model.Id onchange="RatingChange(this)" data-value=@i name="star" />
+                            <label class="@Class" for=@Id></label>
+                        }
+                    }
+                </div>
+            </form>  
+            <p> Average: @Model.Rating.ToString() </p>
+        </div>
+    </div>
+    <div class="post-preview">
+        <img src=@Model.Cover class="img-responsive center-block" />
+    </div>
+    <div class="tags-container">
+        Tags:
+        @{ foreach (var i in Model.Tags)
+            {
+                <div class="tag" id=@i.Name><a href="#">@i.Name</a></div>}
+        }
+    </div>
+</div>
+
+<script>
+    'use strict';
+    function RatingChange(element)
+    {
+       // alert(element.getAttribute('data-id'));
+       // alert(element.closest("div").id);
+        element.closest("div").className="stars userchecked";
+    }
+    
+</script>
