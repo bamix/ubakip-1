@@ -154,13 +154,14 @@
 
     function LoadDialog(event) {
         ngDialog.open({
-            template: 'Enter URL:  <input type="url" id="url"/><br/>or <input id="file" type="file"><br/><button type="button" ng-click="AddIm()" class="btn btn-success">Add</button>',
+            template: 'Select file:<br/><input id="file" type="file"><br/><button type="button" ng-click="AddIm()" class="btn btn-success">Add</button>',
             plain: true,
             className: 'ngdialog-theme-default',
             controller: ['$scope', function ($scope) {
                 $scope.AddIm = function () {
-                    if ($("#file").val() != "") { alert($("#file").val()); }
-                    if ($("#url").val() != "") { alert("kek2"); }
+                    if ($("#file").val() != "") {                        
+                        ReadFileTo($("#file")[0].files[0], $(event.target));
+                    }
                     ngDialog.close();
                 }
             }],
@@ -278,9 +279,46 @@
             if (e.preventDefault) e.preventDefault();
             if (e.stopPropagation) e.stopPropagation();
             var file = event.dataTransfer.files[0];
-            alert($(this).attr("id"));
+            ReadFileTo(file, $(this).find(".image-cell"))
+          //  alert($(this).attr("id"));
         });
     };
+
+    function ReadFileTo(file,place)
+    {
+        var fileValid = CheckFile(file);
+        if (!fileValid.isValid) return;
+        var reader = new FileReader();       
+        console.log(file);
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+            UpdateImage(reader.result, fileValid.IsVideo, place.attr("id"));
+            $.ajax({
+                type: 'POST',
+                url: "/Comix/Upload",
+                data: { data: reader.result },
+                success: function (newUrl) {
+                    $scope.images[place.attr("id")].src = newUrl;
+                }
+            });
+        }
+    }
+
+    function CheckFile(file)
+    {
+        if (file.type == "image/jpeg" || file.type == "image/jpg" || file.type == "image/bmp" || file.type == "image/gif" || file.type == "image/png")
+        { return { isValid: true, IsVideo: false } }
+        if (file.type == "video/mp4")
+        { return { isValid: true, IsVideo: true } }
+        return {isValid : false , IsVideo :false}
+    }
+
+    function UpdateImage(newUrl,isVideo, imageId)
+    {
+        $scope.images[imageId].src = newUrl;
+        $scope.images[imageId].isVideo = isVideo;
+        LoadImage(imageId, $scope.images[imageId]);
+    }
 
     function LoadTemplate() {
         $.ajax({
@@ -300,25 +338,30 @@
     function LoadImages() {
         $($scope.images).each(function (index, value) {
             if ($('#' + value.cellId).length) {
-                $('#' + value.cellId).empty();
-                if (value.isVideo) {
-                    $('#' + value.cellId).append(
-                        '<img class="video-btn" src="../../Content/Images/play.png" />' +
-                    '<video id=' + index + '  class= "image-cell">' +
-                    ' <source src="' + value.src + '" type="video/mp4">  ' +
-                    ' Your browser does not support the video tag.</video>'
-                    );
-                }
-                else {
-                    $("<img/>", {
-                        id: index,
-                        src: value.src,
-                        class: "image-cell"
-                    }).appendTo($('#' + value.cellId));
-                }
-                countLoadedImages++;
+                LoadImage(index, value)
             }
         });
+    }
+
+    function LoadImage(index,value)
+    {
+        $('#' + value.cellId).empty();
+        if (value.isVideo == 1) {
+            $('#' + value.cellId).append(
+                '<img class="video-btn" src="../../Content/Images/play.png" />' +
+            '<video id=' + index + '  class= "image-cell">' +
+            ' <source src="' + value.src + '" type="video/mp4">  ' +
+            ' Your browser does not support the video tag.</video>'
+            );
+        }
+        else {
+            $("<img/>", {
+                id: index,
+                src: value.src,
+                class: "image-cell"
+            }).appendTo($('#' + value.cellId));
+        }
+        countLoadedImages++;
     }
 
     function LoadCellBackground() {

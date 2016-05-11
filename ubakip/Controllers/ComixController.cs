@@ -70,7 +70,7 @@ namespace ubakip.Controllers
             {
                 id = "0",
                 cellId = "sq1",
-                isVideo = false,
+                isVideo = 0,
                 src = "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
                 scale = 1f,
                 rotate = 0,
@@ -82,7 +82,7 @@ namespace ubakip.Controllers
             {
                 id = "1",
                 cellId = "sq2",
-                isVideo = false,
+                isVideo = 0,
                 src = "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
                 scale = 2f,
                 rotate = 90,
@@ -94,7 +94,7 @@ namespace ubakip.Controllers
             {
                 id = "2",
                 cellId = "sq3",
-                isVideo = true,
+                isVideo = 1,
                 src = "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4",
                 scale = 2f,
                 rotate = 0,
@@ -128,6 +128,22 @@ namespace ubakip.Controllers
         {
             page = page;
             return Json(new { msg = "Successfully added " });
+        }
+
+        [HttpPost]
+        public string Upload(string data)
+        {
+            //            if (file != null && file.ContentLength > 0){
+            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account("ubakip-ru", "558288263223776", "IqzfFUQdOiwxYab-wi0a_ppyO-A"); //название, ключ, секретный ключ аккаунта на Cloudinary
+            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account); //тут все понятно
+            CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() //к параметрам, которые передадим в post запросе присоединяем имя файла и путь к нему (путь - локально; тип string)
+            {
+                File = new CloudinaryDotNet.Actions.FileDescription(data)
+            };
+            CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams); //POSTим на cloudinary
+            string url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format)); //ответный url: содержит прямую ссылку на файл
+                                                                                                                                 //           }
+            return url;
         }
     }
 }
