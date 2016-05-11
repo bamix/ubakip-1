@@ -15,5 +15,9 @@ namespace ubakip.Models
         public string Text { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public Users FromUser { get; set; }
+
+        public int ToUserId { get; set; }
     }
 }

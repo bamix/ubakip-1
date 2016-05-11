@@ -8,8 +8,7 @@ namespace ubakip.Models
     public class ImageCell
     {
         public string id { get; set; }
-        public string src { get; set; }
-        public string dd { get; set; }
+        public string src { get; set; }       
         public int isVideo { get; set; }
         public float scale { get; set; }
         public int rotate { get; set; }

@@ -1,35 +1,79 @@
-﻿<div class="container">
-    <div class="row" style="border: 1px solid; border-color: black;">
-        <div class="col-lg-6" style="border: 1px solid; border-color: black;">
-            <h2>Here is the user's information.</h2>
-        </div>
-        <div class="col-lg-6" style="border: 1px solid; border-color: black;">
-            <h2>Here is user's additional information.</h2>
-        </div>
+﻿@model ubakip.Models.UserProfile
+<script src="~/Scripts/masonry.pkgd.min.js"></script>
+<script src="~/Scripts/angular-masonry-directive.js"></script>
+<script src="~/Scripts/imagesloaded.pkgd.min.js"></script>
+
+@*@{ Html.RenderPartial("~/Views/UserInfo/_CommentsPartial.cshtml");  }*@
+<div class="row">
+    <div class="col-md-3 user-avatar">
+        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Name /></a>
     </div>
-    <div class="row" style="padding-top: 5px;">
-        <div class="col-lg-4" style="border: 1px solid; border-color: black;">
-            <h2>Here is user's photo.</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+    <div class="col-md-9 user-info">
+        <h1>@Model.UserInfo.FirstName @Model.UserInfo.LastName</h1>
+        @@@Model.User.Name
+        <h4>
+            Rating:
+        </h4>
+        <div class="user-rating">
+            <form action="">
+                @{  int averageRaring = (int)Math.Round(Model.UserInfo.Rating);
+                    for (int i = 5; i >= 1; i--)
+                    {
+                        string Star = "star-" + i.ToString();
+                        string Class = "star userchecked";
+                        string Checked = "";
+                        if (i == averageRaring) { Checked = "checked"; }
+                        <input class="@Class" id=@Star type="radio" name="star" @Checked disabled readonly />
+                            <label class="@Class" for=@Star></label>
+                    }
+                }
+            </form>
         </div>
-        <div class="col-lg-8" style="padding-left: 25px; border: 1px solid; border-color: black;">
-            <h2>Here is user's About.</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        <h4> Medals:</h4>
+        <div class="medals-container">
+            @{
+                foreach (var m in Model.Medals)
+                {
+                    Html.RenderPartial("MedalPartial", m);
+                }
+            }
         </div>
+
+        <h4>About:</h4>
+        @Model.UserInfo.About
     </div>
-    <hr />
-    <div class="row" style="padding-top: 5px;">
-        <div class="col-lg-12" style="border: 1px solid; border-color: black;">
-            <h2>Here is user's medals.</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        </div>
-    </div>
-    <hr />
-    @{ Html.RenderPartial("~/Views/UserInfo/_CommentsPartial.cshtml");  }
 </div>
+
+<div class="comment-editor" ng-app="CommentApp" ng-controller="CommentListController">
+    <script src="~/Scripts/comment.js"></script>
+
+    <form ng-submit="addComment()"
+          ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Comments),@Model.User.Id)'>
+        <textarea ng-model="commentText" size="30"
+               placeholder="add new comment"></textarea>
+        
+        <input class="btn btn-success" type="submit" value="add">
+    </form>
+
+
+    <div masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".masonry-brick","column-width" : "300"}'>
+        <div  masonry-tile class="masonry-brick comment"  id={{comment.id}}  ng-repeat="comment in comments">
+            <div class="comment-info">
+                <div class="avatar-div">
+                    <img ng-src={{comment.fromUser.photo}} class="avatar img-circle " />
+                </div>
+                <a href="#" class="centered"> {{comment.fromUser.name}}</a>
+            </div>
+            <div class="comment-text">
+                {{comment.text}}
+            </div>
+        </div>
+    </div>       
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 

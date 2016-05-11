@@ -175,6 +175,7 @@
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -213,15 +214,18 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular-masonry-directive.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="fonts\BuxtonSketch.eot" />
     <Content Include="fonts\BuxtonSketch.ttf" />
     <Content Include="fonts\BuxtonSketch.woff" />
+    <Content Include="Scripts\blocksit.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\comment.js" />
     <Content Include="Scripts\drag-and-drop-pages.js" />
+    <Content Include="Scripts\imagesloaded.pkgd.min.js" />
     <Content Include="Scripts\interact.js" />
     <Content Include="Scripts\interact.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -239,6 +243,7 @@
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jscolor.min.js" />
+    <Content Include="Scripts\masonry.pkgd.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\ngDialog.js" />
     <Content Include="Scripts\ngDialog.min.js" />

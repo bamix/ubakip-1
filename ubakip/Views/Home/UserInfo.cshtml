@@ -1,19 +1,19 @@
-﻿@model ubakip.Models.UserInfo
+﻿@model ubakip.Models.UserProfile
 
 
 <div class="row">
     <div class="col-md-3 user-avatar">
-        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Nickname /></a> 
+        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Name /></a> 
         </div>
     <div class="col-md-9 user-info">
-        <h1>@Model.FirstName @Model.LastName</h1>
-         @@@Model.User.Nickname
+        <h1>@Model.UserInfo.FirstName @Model.UserInfo.LastName</h1>
+         @@@Model.User.Name
         <h4>
             Rating:
         </h4>
         <div class="user-rating">         
                 <form action="">
-                    @{  int averageRaring = (int)Math.Round(Model.Rating);
+                    @{  int averageRaring = (int)Math.Round(Model.UserInfo.Rating);
                         for (int i = 5; i >= 1; i--)
                         {
                             string Star = "star-" + i.ToString();
@@ -37,7 +37,7 @@
     </div>
     
         <h4>About:</h4>
-            @Model.About
+            @Model.UserInfo.About
 </div>
 </div>
 
@@ -49,7 +49,8 @@
             <input type="text" ng-model="commentList.commentText" size="30"
                    placeholder="add new comment">
             <input class="btn-primary" type="submit" value="add">
-        </form>    
+        </form> 
+       
      <div class="comment-container"  ng-repeat="comment in commentList.comments">
             <div class="comment">
                 <div class="row">

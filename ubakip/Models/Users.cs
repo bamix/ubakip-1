@@ -20,7 +20,9 @@ namespace ubakip.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string Name { get; set; }       
+        public string Name { get; set; }
+
+        public string Photo { get; set; }
 
         public int Role { get; set; }
 

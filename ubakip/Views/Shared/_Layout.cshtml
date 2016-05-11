@@ -20,50 +20,55 @@
    
 
     @Styles.Render("~/Content/css")
+    <script>
+        $(function () {
+            function closeSearch() {
+                var $form = $('.navbar-collapse form[role="search"].active')
+                $form.find('input').val('');
+                $form.removeClass('active');
+            }
 
+            // Show Search if form is not active // event.preventDefault() is important, this prevents the form from submitting
+            $(document).on('click', '.navbar-collapse form[role="search"]:not(.active) button[type="submit"]', function (event) {
+                event.preventDefault();
+                var $form = $(this).closest('form'),
+                    $input = $form.find('input');
+                $form.addClass('active');
+                $input.focus();
+            });
+            // ONLY FOR DEMO // Please use $('form').submit(function(event)) to track from submission
+            // if your form is ajax remember to call `closeSearch()` to close the search container
+            $(document).on('click', '.navbar-collapse form[role="search"].active button[type="submit"]', function (event) {
+                event.preventDefault();
+                var $form = $(this).closest('form'),
+                    $input = $form.find('input');
+                $('#showSearchTerm').text($input.val());
+                closeSearch()
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            @*<div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("ubakip", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("New", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Popular", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Comix", "Index", "Comix")</li>
-                    <li>@Html.ActionLink("ComixMaker", "ComixMaker", "Comix")</li>
-                </ul>*@
-                @*<div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        @if (@User.Identity.IsAuthenticated)
-                        {
-                            <li><a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a></li>
-                            <li>@Html.ActionLink(@User.Identity.Name, "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
-                            <li><a href="@Url.Action("Logout", "Account")">Log Out</a></li>
-                        }
-                        else
-                        {
-                            <li>@Html.ActionLink("SIGN IN", "Login", "Account", new { area = "" }, new { @class = "" })</li>
-                            <li><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
-                        }
-                    </ul>
-                </div>*@
-            @*</div>*@
             <!-- Title -->
             <div class="navbar-header pull-left">
                 @Html.ActionLink("ubakip", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-
             <!-- 'Sticky' (non-collapsing) right-side menu item(s) -->
             <div class="navbar-header pull-right">
+                
+    
                 <ul class="nav pull-left">
+                    <li class="pull-left">
+                        <form action="" class="search-form">
+                            <div class="form-group has-feedback">
+                                <label for="search" class="sr-only">Search</label>
+                                <input type="text" class="form-control" name="search" id="search" placeholder="search">
+                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </div>
+                        </form>
+                    </li>
                     @if (@User.Identity.IsAuthenticated)
                     {
                         <!-- This works well for static text, like a username -->
@@ -87,8 +92,7 @@
                             <li><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
                     }
                     
-                </ul>
-
+                </ul>                
                 <!-- Required bootstrap placeholder for the collapsed menu -->
                 <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
             </div>
@@ -101,7 +105,7 @@
                     <li>@Html.ActionLink("Popular", "Index", "Home")</li>
                     <li>@Html.ActionLink("Comix", "Index", "Comix")</li>
                     <li>@Html.ActionLink("ComixMaker", "ComixMaker", "Comix")</li>
-                </ul>
+                </ul>                
             </div>
 
             <!-- Additional navbar items -->
