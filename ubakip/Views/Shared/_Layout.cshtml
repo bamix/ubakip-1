@@ -23,74 +23,56 @@
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <!-- Title -->
-            <div class="navbar-header pull-left">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 @Html.ActionLink("ubakip", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <!-- 'Sticky' (non-collapsing) right-side menu item(s) -->
-            <div class="navbar-header pull-right">
-                
-    
-                <ul class="nav pull-left">
-                    <li class="pull-left">
-                        <form action="" class="search-form">
-                            <div class="form-group has-feedback">
-                                <label for="search" class="sr-only">Search</label>
-                                <input type="text" class="form-control" name="search" id="search" placeholder="search">
-                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                            </div>
-                        </form>
-                    </li>
-                    @if (@User.Identity.IsAuthenticated)
-                    {
-                        <!-- This works well for static text, like a username -->
-                        <li class="navbar-text pull-left">@Html.ActionLink(@User.Identity.Name, "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
-                    <!-- Add any additional bootstrap header items.  This is a drop-down from an icon -->
-                        <li class="dropdown pull-right">
-                            <a href="#" data-toggle="dropdown" style="margin-top: 5px;" class="dropdown-toggle"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Logout", "Account")">Log Out</a>
-                                </li>
-                            </ul>
-                        </li>                        
-                    }
-                    else
-                    {
-                        <li class="pull-right">@Html.ActionLink("SIGN IN", "Login", "Account", new { area = "" }, new { @class = "" })</li>
-                            <li class="pull-right"><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
-                    }
-                    
-                </ul>                
-                <!-- Required bootstrap placeholder for the collapsed menu -->
-                <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-            </div>
-
-            <!-- The Collapsing items            navbar-left or navbar-right -->
-            <div class="collapse navbar-collapse navbar-left">
-                <!--                      pull-right keeps the drop-down in line -->
-                <ul class="nav navbar-nav pull-right">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("New", "Index", "Home")</li>
                     <li>@Html.ActionLink("Popular", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Comix", "Index", "Comix")</li>
-                    <li>@Html.ActionLink("ComixMaker", "ComixMaker", "Comix")</li>
-                </ul>                
-            </div>
-
-            <!-- Additional navbar items -->
-            <div class="collapse navbar-collapse navbar-right">
-                <!--                      pull-right keeps the drop-down in line -->
-                <ul class="nav navbar-nav pull-right">
-                    @*<li><a href="/locator">Locator</a></li>
-                    <li><a href="/extras">Extras</a></li>*@
+                    <li>@Html.ActionLink("Comics", "Index", "Comix")</li>
+                    <li>@Html.ActionLink("ComicsMaker", "ComixMaker", "Comix")</li>
+                    <li>@Html.ActionLink(Resources.Resource.User, "Index", "UserInfo")</li>
                 </ul>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <div class="lag-container">
+                                <a href="@Url.Action("ChangeCulture", "Home", new {lang = "ru" })">
+                                    <img src="~/Content/Images/ru.png" class="lang-icon" />
+                                </a>
+                                <a href="@Url.Action("ChangeCulture", "Home", new {lang = "en" })">
+                                    <img src="~/Content/Images/en.png" class="lang-icon" />
+                                </a>
+                            </div>
+                        </li>
+                        @if (@User.Identity.IsAuthenticated)
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a></li>
+                                    <li>@Html.ActionLink("Profile", "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
+                                    <li><a href="@Url.Action("Logout", "Account")">Log Out</a></li>
+                                </ul>
+                            </li>                            
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("SIGN IN", "Login", "Account", new { area = "" }, new { @class = "" })</li>
+                            <li><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
+                        }                        
+                    </ul>               
+                </div>
             </div>
         </div>
     </div>
-    <div class="container body-content">
+ <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>

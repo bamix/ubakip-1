@@ -279,8 +279,7 @@
             if (e.preventDefault) e.preventDefault();
             if (e.stopPropagation) e.stopPropagation();
             var file = event.dataTransfer.files[0];
-            ReadFileTo(file, $(this).find(".image-cell"))
-          //  alert($(this).attr("id"));
+            ReadFileTo(file, $(this).find(".image-cell"))         
         });
     };
 
@@ -720,4 +719,38 @@
         return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
     }
 
-});
+
+    //$(function () {
+    //    function prettydump(obj) {
+    //        ret = ""
+    //        $.each(obj, function (key, value) {
+    //            ret += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+    //        });
+    //        return ret;
+    //    }
+
+    //    $('.cloudinary-fileupload')
+    //    .fileupload({
+    //        dropZone: '.cell',
+    //        start: function () {
+               
+    //        },
+    //        progress: function () {
+
+    //        },
+    //    })
+    //    .on('cloudinarydone', function (e, data) {
+    //        alert("kek");
+    //        //$('.status_value').text('Idle');
+    //        //$.post('/Comix/UploadDirect', data.result);
+    //        //var info = $('<div class="uploaded_info"/>');
+    //        //$(info).append($('<div class="data"/>').append(prettydump(data.result)));
+    //        //$(info).append($('<div class="image"/>').append(
+    //        //  $.cloudinary.image(data.result.public_id, {
+    //        //      format: data.result.format, width: 150, height: 150, crop: "fill"
+    //        //  })
+    //        //));
+    //        //$('.uploaded_info_holder').append(info);
+    //    });
+    //});
+ });

@@ -19,12 +19,17 @@
             }
         </select>
     </p>
+  
+    <div>
+        <label>
+            <input type="checkbox" ng-model='publish'>Published
+        </label>
+    </div>
+        <button type="button" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-success">Add page</button> 
         <div class="pages-container" id="sortable" ng-model="pages">           
             <div ng-class="{'list-group-item': true, 'cover': page.id == coverPageId, 'page-preview' :page.id != coverPageId}" id={{page.id}} ng-repeat="page in pages">
                <img class="img-responsive center-block" ng-src={{page.preview}}>
-            </div>
-            <div class="list-group-item page-preview ui-state-disabled" id="add-page">
-                <img class="img-responsive center-block" src="http://images.vectorhq.com/images/previews/fb4/addition-plus-sign-clip-art-84945.png">
             </div>
         </div>
     </div>

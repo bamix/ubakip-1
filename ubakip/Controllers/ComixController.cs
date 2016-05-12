@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CloudinaryDotNet;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +12,7 @@ namespace ubakip.Controllers
 {
     public class ComixController : Controller
     {
+        static Cloudinary m_cloudinary;
         // GET: Comix
         public ActionResult Index()
         {
@@ -19,6 +22,44 @@ namespace ubakip.Controllers
             Post post = GetTestPost();           
            
             return View(post);
+        }
+
+        static ComixController()
+        {
+            Account acc = new Account(
+                    "ubakip-ru",
+                    "558288263223776",
+                    "IqzfFUQdOiwxYab-wi0a_ppyO-A");
+
+            m_cloudinary = new Cloudinary(acc);
+        }
+
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public void UploadDirect()
+        {
+            var headers = HttpContext.Request.Headers;
+
+            string content = null;
+            using (StreamReader reader = new StreamReader(HttpContext.Request.InputStream))
+            {
+                content = reader.ReadToEnd();
+            }
+
+            if (String.IsNullOrEmpty(content)) return;
+
+            Dictionary<string, string> results = new Dictionary<string, string>();
+
+            string[] pairs = content.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var pair in pairs)
+            {
+                string[] splittedPair = pair.Split('=');
+
+                if (splittedPair[0].StartsWith("faces"))
+                    continue;
+
+                results.Add(splittedPair[0], splittedPair[1]);
+            }
         }
 
         private static Post GetTestPost()
@@ -138,6 +179,7 @@ namespace ubakip.Controllers
             page.Clouds = new List<Cloud>();
             page.Clouds.Add(cloud1);
             page.Clouds.Add(cloud2);
+            ViewBag.Cloudinary = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "false" } });
             return View(page);
         }
 

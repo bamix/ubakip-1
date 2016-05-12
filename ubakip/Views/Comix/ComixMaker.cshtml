@@ -6,9 +6,15 @@
 <script src="~/Scripts/ngDialog.min.js"></script>
 <script src="~/Scripts/comixMaker.js"></script>
 <script src="~/Scripts/jscolor.min.js"></script>
-
+<script src="~/Scripts/jquery.fileupload.js"></script>
+<script src="~/Scripts/jquery.cloudinary.js"></script>
 <div class="row margin-auto" ng-controller="comicsMakerController" ng-cloak="" ng-app="MyApp"
      ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model))'>
+
+        @*<form>
+            @ViewBag.Cloudinary.Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object>() { { "tags", (object)"direct_photo_album" } }, new Dictionary<string, string>() { { "multiple", "true" } })
+        </form>*@
+    
     <div class="col-md-8">
         <div class="wrapper">
             <div class="main-form center-block" id="main-form" style="background:#{{background}}">

@@ -7,6 +7,7 @@
     $scope.tagsText = [];
     $scope.tagList = [];
     $scope.coverPageId;
+    $scope.publish = true;
 
     $scope.Initialize = function (model) {
         $scope.name = model.name;
@@ -44,8 +45,4 @@
         $scope.coverPageId = parseInt($(this).attr("id"));
         $scope.$apply();
     });
- 
-    $("#add-page").click(function () {
-        alert("kek");
-    })
 });
