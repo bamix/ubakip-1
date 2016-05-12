@@ -35,16 +35,17 @@ namespace ubakip.Controllers
                 Id = 1L,
                 Rating = 3.2f,
                 UserRating = 2f,
-                Cover = "https://pp.vk.me/c633523/v633523851/9920/E93Q5a_KRzE.jpg",
+                //Cover = "https://pp.vk.me/c633523/v633523851/9920/E93Q5a_KRzE.jpg",
+                CoverPageId = 1,
                 CreateTime = DateTime.Now,
                 MPAARating = new MPAARating() {Id=2, Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
                 Tags = tags
             };
-            Page page1 = new Page() { Preview = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Petit_Sammy_%C3%A9ternue.jpg/275px-Petit_Sammy_%C3%A9ternue.jpg" };
-            Page page2 = new Page() { Preview = "http://znayka.org.ua/uploads/6fd0644155/e83218673d.jpg" };
-            Page page3 = new Page() { Preview = "http://www.gamer.ru/system/attached_images/images/000/339/387/normal/stalkerlegend-ucoz-ru_rdr_comix_04.jpg" };
-            Page page4 = new Page() { Preview = "http://acomics.ru/upload/!c/!import/jonbot-vs-martha/000008-3iey7amix7.jpg" };
-            Page page5 = new Page() { Preview = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRNb62B-C8g7TUICBBygWgMyfNyLkIvs2Fg6VBYr00rE4Szuhw4" };
+            Page page1 = new Page() { Id = 1, Preview = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Petit_Sammy_%C3%A9ternue.jpg/275px-Petit_Sammy_%C3%A9ternue.jpg" };
+            Page page2 = new Page() { Id = 2, Preview = "http://znayka.org.ua/uploads/6fd0644155/e83218673d.jpg" };
+            Page page3 = new Page() { Id = 3, Preview = "http://www.gamer.ru/system/attached_images/images/000/339/387/normal/stalkerlegend-ucoz-ru_rdr_comix_04.jpg" };
+            Page page4 = new Page() { Id = 4, Preview = "http://acomics.ru/upload/!c/!import/jonbot-vs-martha/000008-3iey7amix7.jpg" };
+            Page page5 = new Page() { Id = 5, Preview = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRNb62B-C8g7TUICBBygWgMyfNyLkIvs2Fg6VBYr00rE4Szuhw4" };
             post.Pages.Add(page1);
             post.Pages.Add(page2);
             post.Pages.Add(page3);

@@ -7,7 +7,7 @@ namespace ubakip.Models
 {
     public class Page
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public List<ImageCell> ImageCell { get; set; }
         public List<Cloud> Clouds { get; set; }
         public string TemplateName { get; set; }

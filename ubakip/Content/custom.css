@@ -189,6 +189,18 @@ div.user-rating {
 
 }
 
+.cover{
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    margin: 1%;
+    margin-bottom:0px;
+    background: green;
+    padding: 0.5%;
+    border: dashed;
+    border-radius: 5px;
+}
+
 .page-preview {
     width: 150px;
     height: 150px;
@@ -201,7 +213,8 @@ div.user-rating {
     border-radius: 5px;
 }
 
-    .page-preview .img-responsive {
+    .page-preview .img-responsive,
+     .cover .img-responsive{
         max-height: 100%;
     }
 

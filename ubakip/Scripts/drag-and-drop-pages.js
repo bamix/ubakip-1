@@ -6,11 +6,13 @@
     $scope.tags = [];
     $scope.tagsText = [];
     $scope.tagList = [];
+    $scope.coverPageId;
 
     $scope.Initialize = function (model) {
         $scope.name = model.name;
-        $scope.pages = model.pages;
+        $scope.pages = model.pages;       
         $scope.tags = model.tags;
+        $scope.coverPageId = model.coverPageId;
         $($scope.tags).each(function (index, value) {
             $scope.tagsText.push({ text: value.name });
         });
@@ -31,5 +33,19 @@
         return $scope.tagList;
     };
 
+    $("#sortable").sortable({
+        items: "div:not(.ui-state-disabled)",
+        cursor: 'pointer',
+        connectWith: ".pages-container"
+    }).disableSelection();
+
+    $("#sortable").on("dblclick", ".list-group-item", function () {
+        if ($(this).attr("id") == null) return;
+        $scope.coverPageId = parseInt($(this).attr("id"));
+        $scope.$apply();
+    });
  
+    $("#add-page").click(function () {
+        alert("kek");
+    })
 });

@@ -13,7 +13,7 @@ namespace ubakip.Models
         public float Rating { get; set; }
         public float UserRating { get; set; }
         public MPAARating MPAARating { get; set; }
-        public string Cover { get; set; }
+        public int CoverPageId { get; set; }
         public Users Author { get; set; }
         public List<Page> Pages = new List<Page>();
         public List<Tag> Tags { get; set; }
