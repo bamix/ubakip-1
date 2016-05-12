@@ -13,6 +13,16 @@ namespace ubakip.Controllers
         // GET: Comix
         public ActionResult Index()
         {
+            //Todo if isAuthor
+            return RedirectToAction("Creator");
+
+            Post post = GetTestPost();           
+           
+            return View(post);
+        }
+
+        private static Post GetTestPost()
+        {
             List<Tag> tags = new List<Tag>();
             tags.Add(new Tag() { Name = "tag1" });
             tags.Add(new Tag() { Name = "tag2" });
@@ -27,7 +37,7 @@ namespace ubakip.Controllers
                 UserRating = 2f,
                 Cover = "https://pp.vk.me/c633523/v633523851/9920/E93Q5a_KRzE.jpg",
                 CreateTime = DateTime.Now,
-                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
+                MPAARating = new MPAARating() {Id=2, Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
                 Tags = tags
             };
             Page page1 = new Page() { Preview = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Petit_Sammy_%C3%A9ternue.jpg/275px-Petit_Sammy_%C3%A9ternue.jpg" };
@@ -40,7 +50,20 @@ namespace ubakip.Controllers
             post.Pages.Add(page3);
             post.Pages.Add(page4);
             post.Pages.Add(page5);
-            return View(post);
+            return post;
+        }
+
+        public ActionResult Creator(Post post)
+        {
+            List<MPAARating> ratings = new List<MPAARating>();
+            ratings.Add(new MPAARating() { Id = 1, Description  = "General audiences",Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/RATED_G.svg/70px-RATED_G.svg.png" });
+            ratings.Add(new MPAARating() { Id = 2, Description = "Parental guidance suggested", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/RATED_PG.svg/70px-RATED_PG.svg.png" });
+            ratings.Add(new MPAARating() { Id = 3, Description = "Parents strongly cautioned", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/RATED_PG-13.svg/70px-RATED_PG-13.svg.png" });
+            ratings.Add(new MPAARating() { Id = 4, Description = "Restricted", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/RATED_R.svg/70px-RATED_R.svg.png" });
+            ratings.Add(new MPAARating() { Id = 5, Description = "No One 17 & Under Admitted", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Nc-17.svg/70px-Nc-17.svg.png" });
+
+            ViewBag.AvailableMPAARatings = ratings;
+            return View(GetTestPost());
         }
 
         public ActionResult ComixMaker()
@@ -128,6 +151,24 @@ namespace ubakip.Controllers
         {
             page = page;
             return Json(new { msg = "Successfully added " });
+        }
+
+        [HttpPost]
+        public ActionResult GetTag(string quote)
+        {
+            //TODO Load tags from bd
+            List<Tag> tags = new List<Tag>();
+            Tag tag1 = new Tag() { Name = "tag1" };
+            Tag tag2 = new Tag() { Name = "tag2" };
+            Tag tag3 = new Tag() { Name = "tag3" };
+            Tag tag4 = new Tag() { Name = "tag4" };
+            Tag tag5 = new Tag() { Name = "tag5" };
+            tags.Add(tag1);
+            tags.Add(tag2);
+            tags.Add(tag3);
+            tags.Add(tag4);
+            tags.Add(tag5);
+            return Json(tags);
         }
 
         [HttpPost]

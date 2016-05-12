@@ -2,11 +2,10 @@
 <script src="~/Scripts/masonry.pkgd.min.js"></script>
 <script src="~/Scripts/angular-masonry-directive.js"></script>
 <script src="~/Scripts/imagesloaded.pkgd.min.js"></script>
-
-@*@{ Html.RenderPartial("~/Views/UserInfo/_CommentsPartial.cshtml");  }*@
+<script src="~/Scripts/jquery.validate.min.js"></script>
 <div class="row">
     <div class="col-md-3 user-avatar">
-        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Name /></a>
+     @*   <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Name /></a>*@
     </div>
     <div class="col-md-9 user-info">
         <h1>@Model.UserInfo.FirstName @Model.UserInfo.LastName</h1>
@@ -46,15 +45,15 @@
 
 <div class="comment-editor" ng-app="CommentApp" ng-controller="CommentListController">
     <script src="~/Scripts/comment.js"></script>
-
-    <form ng-submit="addComment()"
+    @if (@User.Identity.IsAuthenticated)
+    {
+    <form id="MessageForm" ng-submit="addComment()"
           ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Comments),@Model.User.Id)'>
-        <textarea ng-model="commentText" size="30"
-               placeholder="add new comment"></textarea>
-        
-        <input class="btn btn-success" type="submit" value="add">
+        <textarea ng-model="commentText" size="30" name="message" placeholder="add new comment"></textarea>
+        <br />
+        <input class="btn btn-success" type="submit" value="Send">
     </form>
-
+    }
 
     <div masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".masonry-brick","column-width" : "300"}'>
         <div  masonry-tile class="masonry-brick comment"  id={{comment.id}}  ng-repeat="comment in comments">

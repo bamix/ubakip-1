@@ -3,7 +3,7 @@
 <div class="post">
     <div class="row post-header">
         <div class="col-xs-1 avatar-div">
-            <a href="#"> <img src=@Model.Author.Photo class="img-circle avatar center-block" alt=@Model.Author.Nickname /></a>
+            <a href="#"> <img src=@*@Model.Author.Photo*@ class="img-circle avatar center-block" alt=@Model.Author.Name /></a>
         </div>
         <div class="col-xs-7 non-padding">
             <div class="post-info">
@@ -11,11 +11,10 @@
                     <a href="#">@Model.Name</a>
                     <img src=@Model.MPAARating.Photo class="mpaa-image" alt=@Model.MPAARating.Description title=@Model.MPAARating.Description />
                 </h2>
-                <a href="#">@Model.Author.Nickname</a> | @Model.CreateTime
+                <a href="#">@Model.Author.Name</a> | @Model.CreateTime
             </div>
         </div>
-        <div class="col-xs-4 rating">
-           
+        <div class="col-xs-4 rating">           
             <form action="">
                 @{ string userchecked = "";
                     if (Model.UserRating != 0) { userchecked = " userchecked"; }}

@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - Ubakip.ru</title>
 
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <script src="~/Scripts/jquery-2.2.3.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
@@ -17,36 +18,7 @@
 
     <script src="~/Scripts/jquery-ui.min.js"></script>
     @Scripts.Render("~/bundles/angular") 
-   
-
     @Styles.Render("~/Content/css")
-    <script>
-        $(function () {
-            function closeSearch() {
-                var $form = $('.navbar-collapse form[role="search"].active')
-                $form.find('input').val('');
-                $form.removeClass('active');
-            }
-
-            // Show Search if form is not active // event.preventDefault() is important, this prevents the form from submitting
-            $(document).on('click', '.navbar-collapse form[role="search"]:not(.active) button[type="submit"]', function (event) {
-                event.preventDefault();
-                var $form = $(this).closest('form'),
-                    $input = $form.find('input');
-                $form.addClass('active');
-                $input.focus();
-            });
-            // ONLY FOR DEMO // Please use $('form').submit(function(event)) to track from submission
-            // if your form is ajax remember to call `closeSearch()` to close the search container
-            $(document).on('click', '.navbar-collapse form[role="search"].active button[type="submit"]', function (event) {
-                event.preventDefault();
-                var $form = $(this).closest('form'),
-                    $input = $form.find('input');
-                $('#showSearchTerm').text($input.val());
-                closeSearch()
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -88,8 +60,8 @@
                     }
                     else
                     {
-                        <li>@Html.ActionLink("SIGN IN", "Login", "Account", new { area = "" }, new { @class = "" })</li>
-                            <li><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
+                        <li class="pull-right">@Html.ActionLink("SIGN IN", "Login", "Account", new { area = "" }, new { @class = "" })</li>
+                            <li class="pull-right"><a href="@Url.Action("Registration", "Account")">SIGN UP</a></li>
                     }
                     
                 </ul>                

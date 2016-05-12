@@ -1,17 +1,64 @@
 ﻿@model ubakip.Models.Post
 
-<div ng-app="sortableApp" ng-controller="sortableController as pageList" ng-init='pageList.Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Pages))'>
-    <h2 >@Model.Name</h2>
-    <script src="~/Scripts/drag-and-drop-pages.js"></script>
-    <script src="~/Scripts/sortable.min.js"></script>
-    <div class="pages-container"  ui-sortable="sortableOptions"  ng-model="pageList.pages" >
+<script>
+    angular.module('pageApp', [])
+.controller('pageController', function () {
+    var pageList = this;
 
-        <div class="page-preview list-group-item"  ng-repeat="page in pageList.pages" >
-            <img class="img-responsive center-block" ng-src={{page.preview}}>
-        </div>
+    pageList.pages = [];
 
+    pageList.Initialize = function (model) {
+        pageList.pages = model;
+    };
+});
+</script>
+<div ng-app="pageApp" ng-controller="pageController as pageList" ng-init='pageList.Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Pages))'>
+    <div class="col-xs-1 avatar-div">
+        <a href="#"> <img @*src=@Model.Author.Photo*@ class="img-circle avatar center-block" alt=@Model.Author.Name /></a>
     </div>
-</div>
+    <div class="col-xs-7 non-padding">
+        <div class="post-info">
+            <h2>
+                @Model.Name
+                <img src=@Model.MPAARating.Photo class="mpaa-image" alt=@Model.MPAARating.Description title=@Model.MPAARating.Description />
+            </h2>
+            <a href="#">@Model.Author.Name</a> | @Model.CreateTime
+        </div>
+    </div>
+        <div class="col-xs-4 rating">
+            <form action="">
+                @{ string userchecked = "";
+                    if (Model.UserRating != 0) { userchecked = " userchecked"; }}
+                <div class="stars @userchecked">
+                    @{
+                        for (int i = 5; i >= 1; i--)
+                        {
+                            string Star = "star-" + i.ToString();
+                            string Class = "star " + Star;
+                            int averageRating = (int)Math.Round(Model.Rating);
+                            if (Model.UserRating != 0) { averageRating = (int)Model.UserRating; }
+                            string Checked = "";
+                            string Id = Model.Id.ToString() + "-" + i.ToString();
+                            if (i == averageRating) { Checked = "checked"; }
+                            <input class="@Class" id=@Id @Checked type="radio" data-id=@Model.Id onchange="RatingChange(this)" data-value=@i name="star" />
+                            <label class="@Class" for=@Id></label>
+                        }
+                    }
+                </div>
+            </form>
+            <p> Average: @Model.Rating.ToString() </p>
+        </div> 
+
+
+        <div class="pages-container"  ng-model="pageList.pages">
+
+            <div class="page-preview list-group-item" ng-repeat="page in pageList.pages">
+                <img class="img-responsive center-block" ng-src={{page.preview}}>
+            </div>
+
+        </div>
+    </div>
+
 
 
 

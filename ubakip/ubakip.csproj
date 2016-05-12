@@ -206,6 +206,8 @@
     <Content Include="Content\Images\template5.jpg" />
     <Content Include="Content\Images\template6.jpg" />
     <Content Include="Content\Images\template7.jpg" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\ng-tags-input.min.css" />
     <Content Include="Content\ngDialog-theme-default.min.css" />
     <Content Include="Content\ngDialog.min.css" />
     <Content Include="Content\rating.css" />
@@ -241,17 +243,17 @@
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jscolor.min.js" />
     <Content Include="Scripts\masonry.pkgd.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\ngDialog.js" />
+    <Content Include="Scripts\ng-tags-input.min.js" />
     <Content Include="Scripts\ngDialog.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\comixMaker.js" />
-    <Content Include="Scripts\Sortable.js" />
     <Content Include="Scripts\sortable.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
@@ -277,6 +279,7 @@
     <Content Include="Views\Home\UserInfo.cshtml" />
     <Content Include="Views\Home\PostLayout.cshtml" />
     <Content Include="Views\Shared\MedalPartial.cshtml" />
+    <Content Include="Views\Comix\Creator.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
