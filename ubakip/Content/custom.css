@@ -7,17 +7,13 @@
     margin-top:10px;
 }
 .sidebar {
-    /*border:solid;
-    border-width:1px;
-    border-color: black;
-    border-radius:10px;*/
     padding-top: 1%;
     margin: auto;
 }
 
-    .sidebar .list-group-item {
+.sidebar .list-group-item {
         padding: 5px;
-    }
+}
 
 .mpaa-image {
     height: 30px;
@@ -51,8 +47,7 @@
     margin: 2%;
 }
 
-.post-header {
-    background: #c6c6c6;
+.post-header {  
     padding: 0px;
     margin: 0px;
     border-bottom: dashed;
@@ -65,8 +60,7 @@
 }
 
 .tag {
-    margin: 0.1%;
-    background: #9c9999;
+    margin: 0.1%;  
     padding-left: 5%;
     padding-right: 5%;
     display: inline-block;
@@ -74,21 +68,16 @@
     border-width: 1px;
     border-color: black;
     border-radius: 10px;
-    color: green;
 }
 
-.tag a {
-    color: black;
-}
+
 
 .tags-container .tag {
     padding-left: 1%;
     padding-right: 1%;
 }
 
-.tag:hover {
-    background: #cccccc;
-}
+
 
 .tag-li {
     display: initial;
@@ -100,7 +89,6 @@
     border-color: transparent;
     border-radius: 10px;
     border-width: 0px;
-    background: #e9e9e9;
     padding: 0px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -144,7 +132,6 @@ div.user-rating {
     border-color: transparent;
     border-radius: 10%;
     overflow: hidden;
-    background: #e9e9e9;
 }
 
 .comment-info {
@@ -155,20 +142,19 @@ div.user-rating {
 }
 
 
-.comment-info a {
-    
+.comment-info a {    
     margin-top:40px;   
 }
+
 .comment-info .avatar-div .avatar {
     margin:0;
     float:left;
-     height: 50px;
-     width: 50px;
+    height: 50px;
+    width: 50px;
 }
 
 .comment-text {
-    margin-top:10px;
-   
+    margin-top:10px;   
 }
 
 @media only screen and (min-width: 1024px) {
@@ -200,7 +186,6 @@ div.user-rating {
     display: inline-block;
     margin: 1%;
     margin-bottom:0px;
-    background: green;
     padding: 0.5%;
     border: dashed;
     border-radius: 5px;
@@ -212,7 +197,6 @@ div.user-rating {
     display: inline-block;
     margin: 1%;
     margin-bottom:0px;
-    background: #818181;
     padding: 0.5%;
     border: dashed;
     border-radius: 5px;
@@ -225,7 +209,7 @@ div.user-rating {
 
 /*Here is Ribbon Labels*/
 
-.destacados {
+/*.destacados {
     padding: 70px 0;
     text-align: center;
 }
@@ -259,9 +243,9 @@ div.user-rating {
     box-shadow: 0 1px 1px rgba(0,0,0,0.2);
 
     zoom: 1;
-}
+}*/
 
-.box1 h3:before, .box1 h3:after {
+/*.box1 h3:before, .box1 h3:after {
     content: "";
     position: absolute;
 
@@ -314,10 +298,4 @@ div.user-rating {
     left: auto;
     right: 0;
     border-width: 0 0 10px 10px;
-}
-
-.masonry-brick
-{
- 
-  
-}
+}*/

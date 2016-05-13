@@ -1,0 +1,39 @@
+﻿.btn-success {
+    background-color: #3B3738;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #fff;
+    color: black;
+}
+
+.navtext {
+    color: black;
+    font-family: Britannic;
+    font-size: large;
+    text-align: match-parent;
+    box-sizing: border-box;
+    position: relative;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    line-height: 20px;
+}
+
+.navbar-inverse .nav > li > a {
+    color: black;
+    font-size: larger;
+    font-family: britannic;
+    font-size: large;
+}
+
+.navbar {
+    border-bottom-left-radius: 20px 20px;
+    border-bottom-right-radius: 20px 20px;
+}
+/*------------------------*/
+.post-header {
+    background: #c6c6c6;
+}

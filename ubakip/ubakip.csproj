@@ -168,6 +168,7 @@
     <Compile Include="Models\Cloud.cs" />
     <Compile Include="Models\Cloudinary.cs" />
     <Compile Include="Models\Comix.cs" />
+    <Compile Include="Models\ComixesRepository.cs" />
     <Compile Include="Models\ComixTag.cs" />
     <Compile Include="Models\Comments.cs" />
     <Compile Include="Models\ImageCell.cs" />
@@ -195,8 +196,10 @@
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap2.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.css" />
+    <Content Include="Content\darkTheme.css" />
     <Content Include="Content\Images\backgroundcell.jpg" />
     <Content Include="Content\Images\bg.jpg" />
     <Content Include="Content\Images\cloud1.png" />
@@ -221,6 +224,7 @@
     <Content Include="Content\Images\template6.jpg" />
     <Content Include="Content\Images\template7.jpg" />
     <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\lightTheme.css" />
     <Content Include="Content\ng-tags-input.min.css" />
     <Content Include="Content\ngDialog-theme-default.min.css" />
     <Content Include="Content\ngDialog.min.css" />
@@ -250,9 +254,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap2.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
