@@ -16,8 +16,8 @@
         Custom: { value: 2 }
     },
     isFirstLoad = true,
-    countLoadedImages = 0,
-    EmptyCloud = { id: null, type: null, text: "", posX: 0, posY: 0, width: 0, height: 0 };
+    countLoadedImages = 0;
+    //EmptyCloud = { id: null, type: null, text: "", posX: 0, posY: 0, width: 0, height: 0 };
 
     $scope.background = "000000";
 
@@ -168,22 +168,7 @@
             scope: $scope
         });
     }
-
-    $("#main-form").delegate(".video-btn", "click", function () {
-        playPause($(this).parent().find("video"), $(this));
-    });
-
-    function playPause(myVideo, image) {
-        if (myVideo.get(0).paused) {
-            myVideo.get(0).play();
-            image.attr("src", "../../Content/Images/pause.png");
-        }
-        else {
-            myVideo.get(0).pause();
-            image.attr("src", "../../Content/Images/play.png");
-        }
-    }
-
+    
     $("#main-form").delegate(".cell .image-cell", "click", function () {
         var Imgid = $(this).attr('id');
         if (ImageId == Imgid || isDraging) { return; }
@@ -238,7 +223,7 @@
             $.ajax({
                 type: 'POST',
                 url: "/Comix/SavePage",
-                dataType: 'json',
+                dataType: 'text',
                 data: JSON.stringify(page),
                 contentType: "application/json; charset=utf-8",
                 traditional: true,
@@ -460,7 +445,7 @@
 
     function DeleteCloud(event) {
         var parent = $("#" + event.target.id).closest('div');
-        $scope.clouds[-parent.attr("id") - 1] = EmptyCloud;
+        $scope.clouds[-parent.attr("id") - 1].text = null;
         parent.remove();
     }
 

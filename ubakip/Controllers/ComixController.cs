@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -68,7 +69,7 @@ namespace ubakip.Controllers
             tags.Add(new Tag() { Name = "tag1" });
             tags.Add(new Tag() { Name = "tag2" });
             tags.Add(new Tag() { Name = "tag3" });
-            Users author = new Users() { Name = "bamix" };
+            Users author = new Users() { Name = "bamix",Photo= "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg" };
             Post post = new Post()
             {
                 Name = "test name",
@@ -79,7 +80,7 @@ namespace ubakip.Controllers
                 //Cover = "https://pp.vk.me/c633523/v633523851/9920/E93Q5a_KRzE.jpg",
                 CoverPageId = 1,
                 CreateTime = DateTime.Now,
-                MPAARating = new MPAARating() {Id=2, Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
+                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
                 Tags = tags
             };
             Page page1 = new Page() { Id = 1, Preview = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Petit_Sammy_%C3%A9ternue.jpg/275px-Petit_Sammy_%C3%A9ternue.jpg" };
@@ -96,15 +97,8 @@ namespace ubakip.Controllers
         }
 
         public ActionResult Creator(Post post)
-        {
-            List<MPAARating> ratings = new List<MPAARating>();
-            ratings.Add(new MPAARating() { Id = 1, Description  = "General audiences",Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/RATED_G.svg/70px-RATED_G.svg.png" });
-            ratings.Add(new MPAARating() { Id = 2, Description = "Parental guidance suggested", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/RATED_PG.svg/70px-RATED_PG.svg.png" });
-            ratings.Add(new MPAARating() { Id = 3, Description = "Parents strongly cautioned", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/RATED_PG-13.svg/70px-RATED_PG-13.svg.png" });
-            ratings.Add(new MPAARating() { Id = 4, Description = "Restricted", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/RATED_R.svg/70px-RATED_R.svg.png" });
-            ratings.Add(new MPAARating() { Id = 5, Description = "No One 17 & Under Admitted", Photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Nc-17.svg/70px-Nc-17.svg.png" });
-
-            ViewBag.AvailableMPAARatings = ratings;
+        {    
+            ViewBag.AvailableMPAARatings = MPAARating.MPAARatings;
             return View(GetTestPost());
         }
 
@@ -112,9 +106,9 @@ namespace ubakip.Controllers
         {
             Cloud cloud1 = new Cloud()
             {
-                id = "0",
+                id = 0,
                 type = "cloud1",
-                text = "lol",
+                text = "lotgfcrfcl",
                 posX = 0,
                 posY = 0,
                 height = "50%",
@@ -122,7 +116,7 @@ namespace ubakip.Controllers
             };
             Cloud cloud2 = new Cloud()
             {
-                id = "1",
+                id = 1,
                 type = "cloud3",
                 text = "kek",
                 posX = 3f,
@@ -133,7 +127,7 @@ namespace ubakip.Controllers
 
             ImageCell imageCell1 = new ImageCell()
             {
-                id = "0",
+                id = 0,
                 cellId = "sq1",
                 isVideo = 0,
                 src = "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
@@ -145,7 +139,7 @@ namespace ubakip.Controllers
 
             ImageCell imageCell2 = new ImageCell()
             {
-                id = "1",
+                id = 1,
                 cellId = "sq2",
                 isVideo = 0,
                 src = "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
@@ -157,7 +151,7 @@ namespace ubakip.Controllers
 
             ImageCell imageCell3 = new ImageCell()
             {
-                id = "2",
+                id = 2,
                 cellId = "sq3",
                 isVideo = 1,
                 src = "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4",
@@ -192,7 +186,9 @@ namespace ubakip.Controllers
         [HttpPost]
         public ActionResult SavePage(Page page)
         {
-            page = page;
+
+           // page = page;
+            SaveClouds(page.Clouds);
             return Json(new { msg = "Successfully added " });
         }
 
@@ -229,5 +225,91 @@ namespace ubakip.Controllers
                                                                                                                                  //           }
             return url;
         }
+
+        private void SaveClouds(List<Cloud> clouds)
+        {
+            DeleteEmptyClouds(clouds);
+            SaveCloudsToDatabase(clouds);
+        }
+
+        private void DeleteEmptyClouds(List<Cloud> clouds)
+        {
+            List<Cloud> cloudsToRemove = new List<Cloud>();
+            for (int i = 0; i < clouds.Count; i++)
+                if (clouds[i].text == null) {
+                    cloudsToRemove.Add(clouds[i]);
+                    clouds.RemoveAt(i);
+                    i--;                  
+                }
+            RemoveCloudsFromDatabase(cloudsToRemove);
+        }
+
+        private void RemoveCloudsFromDatabase(List<Cloud> clouds)
+        {
+            //TODO Realize
+        }
+
+        //public int SaveImageCell(ImageCell imageCell)
+        //{
+        //    using (var db = new MainDbContext())
+        //    {
+        //        db.ImageCell.Add(imageCell);
+        //        db.SaveChanges();
+        //    }
+        //    return imageCell.id;
+        //}
+
+        private List<int> SaveImageCellsToDatabase(List<ImageCell> imageCell)
+        {
+            List<int> ids = new List<int>();
+            using (var db = new MainDbContext())
+            {
+                foreach (var imgCell in imageCell)
+                {
+                    db.ImageCell.Add(imgCell);
+                    db.SaveChanges();
+                    ids.Add(imgCell.id);
+                }
+            }
+            return ids;
+        }
+
+        //public int SaveCloudToDatabase(Cloud cloud)
+        //{
+        //    using (var db = new MainDbContext())
+        //    {              
+        //        db.Cloud.Add(cloud);
+        //        db.SaveChanges();
+        //    }
+        // return cloud.id;
+        //}
+
+        private List<int> SaveCloudsToDatabase(List<Cloud> clouds)
+        {
+            List<int> ids = new List<int>();
+            using (var db = new MainDbContext())
+            {
+                var c = db.Cloud.Any(o => o.id == clouds[0].id);
+                foreach (var cld in clouds)
+                {
+                    ids.Add(db.Cloud.Any(o => o.id == cld.id) ? UpdateCloud(db, cld) : AddCloud(db, cld));
+                }
+                db.SaveChanges();
+            }
+            return ids;
+        }
+
+        private int UpdateCloud(MainDbContext db, Cloud cloud)
+        {
+            db.Entry<Cloud>(cloud).State = EntityState.Modified;
+            return cloud.id;
+        }
+
+        private int AddCloud(MainDbContext db, Cloud cloud)
+        {
+            db.Cloud.Add(cloud);
+            return cloud.id;
+        }
+
     }
 }

@@ -45,6 +45,14 @@
 
 .post-preview {
     margin: 2%;
+    width: 80%;
+    display: inline-block;
+  position: relative;
+}
+.post-preview:after {
+  padding-top: 100%;   
+  display: inline-block; 
+  content: '';
 }
 
 .post-header {  
@@ -209,7 +217,7 @@ div.user-rating {
 
 /*Here is Ribbon Labels*/
 
-/*.destacados {
+.destacados {
     padding: 70px 0;
     text-align: center;
 }
@@ -243,9 +251,9 @@ div.user-rating {
     box-shadow: 0 1px 1px rgba(0,0,0,0.2);
 
     zoom: 1;
-}*/
+}
 
-/*.box1 h3:before, .box1 h3:after {
+.box1 h3:before, .box1 h3:after {
     content: "";
     position: absolute;
 
@@ -298,4 +306,4 @@ div.user-rating {
     left: auto;
     right: 0;
     border-width: 0 0 10px 10px;
-}*/
+}

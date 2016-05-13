@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<script src="~/Scripts/VideoController.js"></script>
 <div class="row">
     <div class="col-md-2 col-md-push-10">
         <div class="sidebar" id="sidebar">
@@ -12,7 +12,7 @@
                 @{
                     foreach (var p in Model.Tags)
                     {
-                        <div class="tag-li"><div class="tag"><a href="#">@p.Name</a></div><span class="badge">@p.Count</span></div>
+                        <div class="tag-li"><div class="tag"><a href="@Url.Action("FindComixByTag", "Home",new {tag = p.Name })">@p.Name</a></div><span class="badge">@p.Count</span></div>
                     }
                 }               
             </div>

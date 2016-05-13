@@ -7,7 +7,7 @@ namespace ubakip.Models
 {
     public class Cloud
     {       
-        public string id { get; set; }
+        public int id { get; set; }
         public string type { get; set; }
         public string text { get; set; }
         public float posX { get; set; }
