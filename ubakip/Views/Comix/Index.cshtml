@@ -1,28 +1,16 @@
 ﻿@model ubakip.Models.Post
 
-<script>
-    angular.module('pageApp', [])
-.controller('pageController', function () {
-    var pageList = this;
-
-    pageList.pages = [];
-
-    pageList.Initialize = function (model) {
-        pageList.pages = model;
-    };
-});
-</script>
-<div ng-app="pageApp" ng-controller="pageController as pageList" ng-init='pageList.Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Pages))'>
+<div >
     <div class="col-xs-1 avatar-div">
-        <a href="#"> <img @*src=@Model.Author.Photo*@ class="img-circle avatar center-block" alt=@Model.Author.Name /></a>
+        <a href="#"> <img src=@Model.Comix.Author.Photo class="img-circle avatar center-block" alt=@Model.Comix.Author.Login /></a>
     </div>
     <div class="col-xs-7 non-padding">
         <div class="post-info">
             <h2>
-                @Model.Name
+                @Model.Comix.Name
                 <img src=@Model.MPAARating.Photo class="mpaa-image" alt=@Model.MPAARating.Description title=@Model.MPAARating.Description />
             </h2>
-            <a href="#">@Model.Author.Name</a> | @Model.CreateTime
+            <a href="#">@Model.Comix.Author.Login</a> | @Model.Comix.DateCreated
         </div>
     </div>
         <div class="col-xs-4 rating">
@@ -38,9 +26,9 @@
                             int averageRating = (int)Math.Round(Model.Rating);
                             if (Model.UserRating != 0) { averageRating = (int)Model.UserRating; }
                             string Checked = "";
-                            string Id = Model.Id.ToString() + "-" + i.ToString();
+                            string Id = Model.Comix.Id.ToString() + "-" + i.ToString();
                             if (i == averageRating) { Checked = "checked"; }
-                            <input class="@Class" id=@Id @Checked type="radio" data-id=@Model.Id onchange="RatingChange(this)" data-value=@i name="star" />
+                            <input class="@Class" id=@Id @Checked type="radio" data-id=@Model.Comix.Id onchange="RatingChange(this)" data-value=@i name="star" />
                             <label class="@Class" for=@Id></label>
                         }
                     }
@@ -50,13 +38,21 @@
         </div> 
 
 
-        <div class="pages-container"  ng-model="pageList.pages">
+    <div class="pages-container">
+        @{
+            foreach (var p in Model.Comix.Pages)
+            {
+                <div style="text-align: center" class="page-preview" onclick="location.href='@Url.Action("List", "Comix", new { postId = Model.Comix.Id, pageId = p.Id })'">
+                    <div class="wrapper">
+                        <div class="main-form center-block" id="main-form" style="background:#@p.Background">
+                            @Html.Raw(p.Preview)
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 
-            <div class="page-preview list-group-item" ng-repeat="page in pageList.pages">
-                <img class="img-responsive center-block" ng-src={{page.preview}}>
-            </div>
-
-        </div>
     </div>
 
 

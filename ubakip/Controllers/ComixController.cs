@@ -6,33 +6,152 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using MultilingualSite.Filters;
 using ubakip.Models;
+using System.Text.RegularExpressions;
 
 namespace ubakip.Controllers
 {
+    [Culture]
     public class ComixController : Controller
     {
-        static Cloudinary m_cloudinary;
+      
         // GET: Comix
-        public ActionResult Index()
-        {
-            //Todo if isAuthor
-            return RedirectToAction("Creator");
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Index(int id)
+        {           
+           if(id==0 || isAuthor(id)) return RedirectToAction("Creator", new { id = id });
 
             Post post = GetTestPost();           
            
             return View(post);
         }
-
-        static ComixController()
+        
+        public bool isAuthor(int comixId)
         {
-            Account acc = new Account(
-                    "ubakip-ru",
-                    "558288263223776",
-                    "IqzfFUQdOiwxYab-wi0a_ppyO-A");
+            var isAuth = false;
+            using (var db = new DataBaseConnection())
+            {
+               Comix comix = db.Comixes.Where(c => c.Id == comixId).Include(c => c.Author).FirstOrDefault();
+                if (comix != null && comix.Author.Login == User.Identity.Name) isAuth = true;
+            }
+            return isAuth;
+        }
 
-            m_cloudinary = new Cloudinary(acc);
+        public ActionResult MyComixes()
+        {
+
+            ComixesRepository comixRepository = new ComixesRepository()
+            {
+                Posts = MakePostsFromComixes(LoadComixesOfUser(User.Identity.Name))
+            };
+
+            return View(comixRepository);
+        }
+
+        public List<Comix> LoadComixesOfUser(string user)
+        {
+            List<Comix> comixes;
+            using (var db = new DataBaseConnection())
+            {
+                comixes = db.Comixes
+                    .Where(c => c.Author.Login == user)
+                    .Include(c=>c.Author)
+                    .Include(c => c.Pages)
+                    .Include(c => c.Tags)                   
+                    .ToList();
+            }
+            if (comixes == null) comixes = new List<Comix>();
+            return comixes;
+        }
+
+        public Comix LoadComixById(int id)
+        {
+            Comix comix;
+            using (var db = new DataBaseConnection())
+            {
+                comix = db.Comixes
+                    .Where(c => c.Id == id)
+                    .Include(c => c.Author)
+                    .Include(c => c.Tags)
+                    .Include(c => c.Tags.Select(t => t.Comixes))
+                    .Include(c => c.Pages)
+                    .Include(c => c.Pages.Select(p => p.Clouds))
+                    .Include(c => c.Pages.Select(p => p.ImageCell))
+                    .FirstOrDefault();
+                DeleteComixSelfReference(comix);
+            }
+            if (comix == null) comix = new Comix();
+            return comix;
+        }
+
+        private static void DeleteComixSelfReference(Comix comix)
+        {
+            foreach (Page page in comix.Pages)
+            {
+                DeletePageSelfReference(page);
+            }
+            foreach (Tag tag in comix.Tags)
+            {
+                tag.Comixes = null;
+            }
+        }
+
+        private static void DeletePageSelfReference(Page page)
+        {            
+                foreach (Cloud cloud in page.Clouds)
+                    cloud.Page = null;
+                foreach (ImageCell image in page.ImageCell)
+                    image.Page = null;            
+        }
+
+        public List<Post> MakePostsFromComixes(List<Comix> comixes)
+        {
+            List<Post> posts = new List<Post>();
+            foreach( Comix comix in comixes)
+            {
+                FixComix(comix);
+                posts.Add(new Post()
+                {
+                    Comix = comix,
+                    MPAARating = MPAARating.MPAARatings[comix.MPAARatingId],
+                    Rating = GetTotalRating(comix.Id),
+                    UserRating = GetUserRating(comix.Id)
+                });
+            }
+            return posts;
+        }
+
+        private void FixComix(Comix comix)
+        {
+            if (comix.CoverPage == null)
+                comix.CoverPage = new Page()
+                {
+                    Preview = "This comix doesn't contain cover",
+                    Background = "000000"
+                };            
+        }
+
+        public float GetTotalRating(int comixId)
+        {
+            // TODO Realize
+            return 2f;
+        }
+
+        public float GetUserRating(int comixId)
+        {
+            // TODO Realize
+            return 2f;
+        }
+
+        [AllowAnonymous]
+        public ActionResult List(int postId, int pageId)
+        {
+            //TODO Load from bd
+            Post post = GetTestPost();
+            ViewBag.TargetId = pageId;
+            return View(post);
         }
 
         [HttpPost]
@@ -69,40 +188,147 @@ namespace ubakip.Controllers
             tags.Add(new Tag() { Name = "tag1" });
             tags.Add(new Tag() { Name = "tag2" });
             tags.Add(new Tag() { Name = "tag3" });
-            Users author = new Users() { Name = "bamix",Photo= "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg" };
+            User author = new User() { Login = "bamix",Photo= "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg" };
+            string preview = "<div class=\"square cell\" id=\"sq1\"><img id=\"0\" src=\"https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg\" class=\"image-cell\" style=\"height: 100%; width: auto; transform: rotate(0deg) scale(1) translate(0%, 0%);\"></div>\n<div class=\"square cell\" id=\"sq2\"><img id=\"1\" src=\"https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg\" class=\"image-cell\" style=\"height: 100%; width: auto; transform: rotate(90deg) scale(2) translate(0%, 40%);\"></div>\n<div class=\"rectangle rect cell\" id=\"sq3\"><img class=\"video-btn\" src=\"../../Content/Images/play.png\"><video id=\"2\" class=\"image-cell\" style=\"height: auto; width: 100%; transform: rotate(0deg) scale(2) translate(0%, 0%);\"> <source src=\"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4\" type=\"video/mp4\">   Your browser does not support the video tag.</video></div>\n\n <div class=\"cloud\" id=\"-1\" style=\"height: 50%; width: 50%; transform: translate(0%, 0%);\"><textarea class=\"textarea\" id=\"-t1\" name=\"text\" style=\"-webkit-mask-box-image: url('../../Content/Images/cloud1.png'); mask-border: url('../../Content/Images/cloud1.png') ;\">lol</textarea></div> <div class=\"cloud\" id=\"-2\" style=\"height: 20%; width: 20%; transform: translate(300%, 30%);\"><textarea class=\"textarea\" id=\"-t2\" name=\"text\" style=\"-webkit-mask-box-image: url('../../Content/Images/cloud3.png'); mask-border: url('../../Content/Images/cloud3.png') ;\">kek</textarea></div>".Replace("'", "&#39"); ;
+
+            //.Replace("'", "&#39"); important! angular don't understand apostrophe
+
+
+            Page page1 = new Page() { Id = 1, Preview = preview, Background = "000000" };
+            Page page2 = new Page() { Id = 2, Preview = preview, Background = "000000" };
+            Page page3 = new Page() { Id = 3, Preview = preview, Background = "000000" };
+            Page page4 = new Page() { Id = 4, Preview = preview, Background = "000000" };
+            Page page5 = new Page() { Id = 5, Preview = preview, Background = "000000" };
             Post post = new Post()
             {
+                Comix = new Comix() { 
                 Name = "test name",
                 Author = author,
-                Id = 1L,
+                Id = 1,
+                DateCreated = DateTime.Now,
+                CoverPage = page1,
+                 Tags = tags
+                },
                 Rating = 3.2f,
-                UserRating = 2f,
-                //Cover = "https://pp.vk.me/c633523/v633523851/9920/E93Q5a_KRzE.jpg",
-                CoverPageId = 1,
-                CreateTime = DateTime.Now,
-                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" },
-                Tags = tags
+                UserRating = 2f,        
+                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" }               
             };
-            Page page1 = new Page() { Id = 1, Preview = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Petit_Sammy_%C3%A9ternue.jpg/275px-Petit_Sammy_%C3%A9ternue.jpg" };
-            Page page2 = new Page() { Id = 2, Preview = "http://znayka.org.ua/uploads/6fd0644155/e83218673d.jpg" };
-            Page page3 = new Page() { Id = 3, Preview = "http://www.gamer.ru/system/attached_images/images/000/339/387/normal/stalkerlegend-ucoz-ru_rdr_comix_04.jpg" };
-            Page page4 = new Page() { Id = 4, Preview = "http://acomics.ru/upload/!c/!import/jonbot-vs-martha/000008-3iey7amix7.jpg" };
-            Page page5 = new Page() { Id = 5, Preview = "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRNb62B-C8g7TUICBBygWgMyfNyLkIvs2Fg6VBYr00rE4Szuhw4" };
-            post.Pages.Add(page1);
-            post.Pages.Add(page2);
-            post.Pages.Add(page3);
-            post.Pages.Add(page4);
-            post.Pages.Add(page5);
+                       post.Comix.Pages.Add(page1);
+            post.Comix.Pages.Add(page2);
+            post.Comix.Pages.Add(page3);
+            post.Comix.Pages.Add(page4);
+            post.Comix.Pages.Add(page5);
             return post;
         }
 
-        public ActionResult Creator(Post post)
-        {    
+        [Authorize]      
+        public ActionResult Creator(int id)
+        {          
+            Post post = id == 0 ? CreatePost() : LoadPost(id);
+          //  post.Comix.CoverPage.Preview= post.Comix.CoverPage.Preview.Replace("'", "&#39");//Important
+            FixPostApostrophr(post);
             ViewBag.AvailableMPAARatings = MPAARating.MPAARatings;
-            return View(GetTestPost());
+            return View(post);
         }
 
-        public ActionResult ComixMaker()
+        private void FixPostApostrophr(Post post)
+        {
+            post.Comix.CoverPage.Preview = post.Comix.CoverPage.Preview.Replace("'", "&#39");
+            post.Comix.Name = post.Comix.Name.Replace("'", "&#39");
+            foreach (Page page in post.Comix.Pages)
+                FixApostroph(page);
+        }
+
+        [HttpPost]
+        public ActionResult DeletePage(int id, int comixId)
+        {
+            using (var db = new DataBaseConnection())
+            {
+                Page page = db.Pages
+                    .Include(p=> p.Clouds)
+                    .Include(p => p.ImageCell)
+                    .FirstOrDefault(c => c.Id == id);               
+                if (page != null)
+                {
+                    Comix comix = db.Comixes
+                        .Include(c=>c.CoverPage)
+                        .Include(c => c.Pages)
+                        .FirstOrDefault(c => c.Id == comixId);
+                    if (comix.CoverPage.Id == id)
+                        if (comix.Pages.Count == 1) comix.CoverPage = null;
+                        else comix.CoverPage = ((List<Page>)comix.Pages)[1];
+                    db.Pages.Remove(page);
+                    db.SaveChanges();
+                }
+            }
+            return Json(new { msg = "Successfully" });
+        }
+
+        private Post LoadPost(int id)
+        {
+          List<Comix> comix = new List<Comix>();
+          comix.Add(LoadComixById(id));
+          Post post =  MakePostsFromComixes(comix).FirstOrDefault();
+          return post;
+        }
+
+        private Page LoadPage(int pageId)
+        {
+            Page page = new Page();
+            using (var db = new DataBaseConnection())
+            {
+                page = db.Pages
+                    .Where(p => p.Id == pageId)
+                    .Include(p => p.Clouds)
+                    .Include(p => p.ImageCell)                    
+                    .FirstOrDefault();
+                DeletePageSelfReference(page);
+            }
+            return page;
+        }
+
+        private Post CreatePost()
+        {
+            Post post = new Post()
+            {
+                Comix = new Comix() {
+                    Author = GetCurrentUser(),
+                    DateCreated = DateTime.Now,
+                    Name = "New name",
+                    CoverPage = null,
+                    MPAARatingId = 1                 
+                },
+                MPAARating = new MPAARating()
+            };
+            SaveComixToDatabase(post.Comix);
+            return post;
+        }
+
+        //FIX
+        public User GetCurrentUser()
+        {
+            string login = User.Identity.Name;
+            User user = new User();
+            using (var db = new DataBaseConnection())
+            {
+                user = db.Users.Where(c => c.Login == login).FirstOrDefault();
+            }            
+            return user;
+        }
+
+        public ActionResult CreateNewPage(int comixId)
+        {
+            Page newPage = GetDefaultPage();
+            using (var db = new DataBaseConnection())
+            {
+                db.Pages.Add(newPage);
+                db.Comixes.Where(c => c.Id == comixId).FirstOrDefault().Pages.Add(newPage);
+                db.SaveChanges();
+            }
+                return RedirectToAction("ComixMaker", new { pageId = newPage.Id });
+        }
+
+        private Page GetTestPage()
         {
             Cloud cloud1 = new Cloud()
             {
@@ -173,8 +399,30 @@ namespace ubakip.Controllers
             page.Clouds = new List<Cloud>();
             page.Clouds.Add(cloud1);
             page.Clouds.Add(cloud2);
-            ViewBag.Cloudinary = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "false" } });
+            return page;
+        }
+
+        private Page GetDefaultPage()
+        {
+            return new Page() { Background = "000000", TemplateName="template1", Preview="No preview"};
+        }
+               
+        public ActionResult ComixMaker(int pageId)
+        {
+            Page page = pageId == 0 ? GetDefaultPage() : LoadPage(pageId);
+            //  ViewBag.Cloudinary = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "false" } });
+            //TODO check if user is author
+            FixApostroph(page);
+            page.Preview = null;
             return View(page);
+        }
+
+        private void FixApostroph(Page page)
+        {
+            if(page.Preview!=null) page.Preview = page.Preview.Replace("'", "&#39");
+            if (page.Clouds != null)
+                foreach (Cloud cloud in page.Clouds)
+                    cloud.text = cloud.text.Replace("'", "&#39");//.Replace("\n", "");
         }
 
         [HttpPost]
@@ -186,9 +434,20 @@ namespace ubakip.Controllers
         [HttpPost]
         public ActionResult SavePage(Page page)
         {
+            page.Preview = page.Preview.Replace("<textarea ", "<textarea disabled ");
+            SavePageToDatabase(page);
+            SaveClouds(page);
+            SaveImages(page);
+            return Json(new { msg = "Successfully added " });
+        }
 
-           // page = page;
-            SaveClouds(page.Clouds);
+        [HttpPost]
+        public ActionResult SaveComix(Comix comix)
+        {
+           if(comix.Pages!=null && comix.Pages.Count>0) comix.CoverPage = ((List<Page>)comix.Pages)[0];
+                   
+            comix.DateCreated = DateTime.Now;
+            SaveComixToDatabase(comix);
             return Json(new { msg = "Successfully added " });
         }
 
@@ -212,52 +471,96 @@ namespace ubakip.Controllers
 
         [HttpPost]
         public string Upload(string data)
-        {
-            //            if (file != null && file.ContentLength > 0){
-            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account("ubakip-ru", "558288263223776", "IqzfFUQdOiwxYab-wi0a_ppyO-A"); //название, ключ, секретный ключ аккаунта на Cloudinary
-            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account); //тут все понятно
-            CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() //к параметрам, которые передадим в post запросе присоединяем имя файла и путь к нему (путь - локально; тип string)
+        {           
+            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account("ubakip-ru", "558288263223776", "IqzfFUQdOiwxYab-wi0a_ppyO-A"); 
+            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account); 
+            CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() 
             {
                 File = new CloudinaryDotNet.Actions.FileDescription(data)
             };
-            CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams); //POSTим на cloudinary
-            string url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format)); //ответный url: содержит прямую ссылку на файл
-                                                                                                                                 //           }
-            return url;
+            CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);                                                                                                                                         
+            return cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
         }
 
-        private void SaveClouds(List<Cloud> clouds)
+        private void SaveTags(Comix comix)
         {
-            DeleteEmptyClouds(clouds);
-            SaveCloudsToDatabase(clouds);
+            using (var db = new DataBaseConnection())
+            {
+                foreach (Tag tag in comix.Tags)
+                {
+                    Tag dbTag = db.Tags
+                        .Include(t=> t.Comixes)
+                        .FirstOrDefault(t => t.Name == tag.Name);                    
+                    if (dbTag != null)
+                    {
+                        if(dbTag.Comixes != null && dbTag.Comixes.Any(c=>c.Id == comix.Id))
+                        dbTag.Count++;
+                        db.Entry<Tag>(dbTag).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        tag.Comixes.Add(comix);
+                        db.Tags.Add(tag);
+                    }
+                }
+                db.SaveChanges();
+            }                
+        }
+
+        private void SavePageToDatabase(Page page)
+        {
+            using (var db = new DataBaseConnection())
+            {
+                if (db.Pages.Any(o => o.Id == page.Id))
+                    UpdatePage(page, db); 
+                else
+                    db.Pages.Add(page);
+                db.SaveChanges();
+            }
+        }
+
+        private void UpdatePage(Page newPage, DataBaseConnection db)
+        {
+            var oldPage = db.Pages
+                      .Include(x => x.Clouds)
+                      .Include(x => x.ImageCell)                     
+                      .Single(c => c.Id == newPage.Id);
+
+            db.Entry(oldPage).CurrentValues.SetValues(newPage);                  
+        }
+
+        private void SaveClouds(Page page)
+        {
+            DeleteEmptyClouds((List<Cloud>)page.Clouds);
+            SaveCloudsToDatabase(page);
         }
 
         private void DeleteEmptyClouds(List<Cloud> clouds)
         {
             List<Cloud> cloudsToRemove = new List<Cloud>();
             for (int i = 0; i < clouds.Count; i++)
-                if (clouds[i].text == null) {
+                if (clouds[i].text == null)
+                {
                     cloudsToRemove.Add(clouds[i]);
                     clouds.RemoveAt(i);
-                    i--;                  
+                    i--;
                 }
             RemoveCloudsFromDatabase(cloudsToRemove);
         }
 
         private void RemoveCloudsFromDatabase(List<Cloud> clouds)
         {
-            //TODO Realize
+            using (var db = new DataBaseConnection())
+            {
+                foreach (var cloud in clouds)
+                {
+                    Cloud cloudToRemove = db.Clouds.FirstOrDefault(c => c.id == cloud.id);
+                    if (cloudToRemove!=null)
+                        db.Entry(cloudToRemove).State = System.Data.Entity.EntityState.Deleted;
+                }
+                db.SaveChanges();
+            }
         }
-
-        //public int SaveImageCell(ImageCell imageCell)
-        //{
-        //    using (var db = new MainDbContext())
-        //    {
-        //        db.ImageCell.Add(imageCell);
-        //        db.SaveChanges();
-        //    }
-        //    return imageCell.id;
-        //}
 
         private List<int> SaveImageCellsToDatabase(List<ImageCell> imageCell)
         {
@@ -274,42 +577,67 @@ namespace ubakip.Controllers
             return ids;
         }
 
-        //public int SaveCloudToDatabase(Cloud cloud)
-        //{
-        //    using (var db = new MainDbContext())
-        //    {              
-        //        db.Cloud.Add(cloud);
-        //        db.SaveChanges();
-        //    }
-        // return cloud.id;
-        //}
-
-        private List<int> SaveCloudsToDatabase(List<Cloud> clouds)
+        private void SaveCloudsToDatabase(Page page)
         {
-            List<int> ids = new List<int>();
-            using (var db = new MainDbContext())
+            using (var db = new DataBaseConnection())
             {
-                var c = db.Cloud.Any(o => o.id == clouds[0].id);
-                foreach (var cld in clouds)
+                foreach (var cld in page.Clouds)
+                    if (db.Clouds.Any(o => o.id == cld.id))
+                        db.Entry<Cloud>(cld).State = EntityState.Modified;
+                    else
+                    {
+                        cld.Page = db.Pages.FirstOrDefault(p => p.Id == page.Id);
+                        db.Clouds.Add(cld);
+                    }
+                db.SaveChanges();
+            }
+        }
+        
+        private void SaveImages(Page page)
+        {
+            using (var db = new DataBaseConnection())
+            {
+                foreach (var img in page.ImageCell)
                 {
-                    ids.Add(db.Cloud.Any(o => o.id == cld.id) ? UpdateCloud(db, cld) : AddCloud(db, cld));
+                    if (db.ImageCells.Any(o => o.id == img.id))
+                        db.Entry<ImageCell>(img).State = EntityState.Modified;
+                    else
+                    {
+                        img.Page = db.Pages.FirstOrDefault(p=>p.Id==page.Id);
+                        if(img.cellId!=null)
+                        db.ImageCells.Add(img);
+                    }
                 }
                 db.SaveChanges();
             }
-            return ids;
         }
 
-        private int UpdateCloud(MainDbContext db, Cloud cloud)
+        private void SaveComixToDatabase(Comix comix)
         {
-            db.Entry<Cloud>(cloud).State = EntityState.Modified;
-            return cloud.id;
+            using (var db = new DataBaseConnection())
+            {
+                if (db.Comixes.Any(o => o.Id == comix.Id))
+                    UpdateComix(comix, db);
+                else
+                    db.Comixes.Add(comix);
+                db.SaveChanges();
+            }
+            SaveTags(comix);
         }
 
-        private int AddCloud(MainDbContext db, Cloud cloud)
+        private void UpdateComix(Comix newComix, DataBaseConnection db)
         {
-            db.Cloud.Add(cloud);
-            return cloud.id;
+            var oldComix = db.Comixes
+                      .Include(x => x.Tags)
+                      .Include(x => x.Pages)                   
+                      .Include(x => x.CoverPage)
+                      .Single(c => c.Id == newComix.Id);
+            oldComix.CoverPage = db.Pages.Where(p => p.Id == newComix.CoverPage.Id).FirstOrDefault();
+            db.Entry(oldComix).CurrentValues.SetValues(newComix);
+            oldComix.Tags = new List<Tag>();
+            foreach (var tag in newComix.Tags)
+                oldComix.Tags.Add(tag);                 
         }
-
+        
     }
 }

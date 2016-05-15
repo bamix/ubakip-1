@@ -5,11 +5,12 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <div class="row">
     <div class="col-md-3 user-avatar">
-        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Name /></a>
+        <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Login /></a>
     </div>
     <div class="col-md-9 user-info">
-        <h1>@Model.UserInfo.FirstName @Model.UserInfo.LastName</h1>
-        @@@Model.User.Name
+        <h1>@Model.User.FirstName @Model.User.LastName</h1>
+        <h3>@Model.User.Login</h3>
+        <hr class="styled" />
         <h4>
             Rating:
         </h4>
@@ -59,7 +60,7 @@
         <div  masonry-tile class="masonry-brick comment"  id={{comment.id}}  ng-repeat="comment in comments">
             <div class="comment-info">
                 <div class="avatar-div">
-                    <img ng-src={{comment.fromUser.photo}} class="avatar img-circle " />
+                    <img ng-src={{comment.fromUser.photo}} />
                 </div>
                 <a href="#" class="centered"> {{comment.fromUser.name}}</a>
             </div>

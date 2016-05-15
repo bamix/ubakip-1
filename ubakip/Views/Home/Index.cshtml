@@ -6,15 +6,19 @@
 <div class="row">
     <div class="col-md-2 col-md-push-10">
         <div class="sidebar" id="sidebar">
-            <button type="button" class="btn  btn-block btn-success " style="">Add post</button>
+            <button type="button" class="btn  btn-block btn-success " onclick="location.href='@Url.Action("Index", "Comix", new { id = 0 })'" style="">Add post</button>
             <div class="tags-cloud">
                 Popular tags:<br />
                 @{
                     foreach (var p in Model.Tags)
                     {
-                        <div class="tag-li"><div class="tag"><a href="@Url.Action("FindComixByTag", "Home",new {tag = p.Name })">@p.Name</a></div><span class="badge">@p.Count</span></div>
+                        <div class="tag-li">
+                            <div class="tag">
+                                <a href="@Url.Action("FindComixByTag", "Home", new {tag = p.Name })">@p.Name</a>
+                            </div><span class="badge">@p.Count</span>
+                        </div>
                     }
-                }               
+                }
             </div>
         </div>
     </div>

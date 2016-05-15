@@ -69,6 +69,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -158,19 +159,36 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JavaScriptConverterController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
-    <Compile Include="CustomLibraries\CustomDecrypt.cs" />
     <Compile Include="CustomLibraries\CustomEncrypt.cs" />
+    <Compile Include="DataBaseConnection.cs" />
     <Compile Include="Filters\CultureAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MainDbContext.cs" />
+    <Compile Include="MainDb1Context.cs" />
+    <Compile Include="Migrations\201605151045295_migrate1.cs" />
+    <Compile Include="Migrations\201605151045295_migrate1.Designer.cs">
+      <DependentUpon>201605151045295_migrate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151447468_mig2.cs" />
+    <Compile Include="Migrations\201605151447468_mig2.Designer.cs">
+      <DependentUpon>201605151447468_mig2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605151502076_mg3.cs" />
+    <Compile Include="Migrations\201605151502076_mg3.Designer.cs">
+      <DependentUpon>201605151502076_mg3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605152118162_mg4.cs" />
+    <Compile Include="Migrations\201605152118162_mg4.Designer.cs">
+      <DependentUpon>201605152118162_mg4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cloud.cs" />
     <Compile Include="Models\Cloudinary.cs" />
     <Compile Include="Models\Comix.cs" />
     <Compile Include="Models\ComixesRepository.cs" />
     <Compile Include="Models\ComixTag.cs" />
-    <Compile Include="Models\Comments.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\ImageCell.cs" />
     <Compile Include="Models\Medal.cs" />
     <Compile Include="Models\MPAARating.cs" />
@@ -191,13 +209,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UsersInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap2.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap2.css" />
     <Content Include="Content\custom.css" />
     <Content Include="Content\darkTheme.css" />
     <Content Include="Content\Images\backgroundcell.jpg" />
@@ -244,20 +264,20 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\comment.js" />
-    <Content Include="Scripts\drag-and-drop-pages.js" />
+    <Content Include="Scripts\comixCreator.js" />
     <Content Include="Scripts\imagesloaded.pkgd.min.js" />
     <Content Include="Scripts\interact.js" />
     <Content Include="Scripts\interact.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
+    <Content Include="Content\bootstrap2.css.map" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap2.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
@@ -275,10 +295,13 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\comixMaker.js" />
+    <Content Include="Scripts\sanitize.js" />
     <Content Include="Scripts\sortable.min.js" />
     <Content Include="Scripts\VideoController.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -292,24 +315,39 @@
     <Content Include="Views\Home\AdminPanel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Registration.cshtml" />
-    <Content Include="Views\Account\UserInfo1.cshtml" />
     <Content Include="Views\UserInfo\Comments.cshtml" />
     <Content Include="Views\UserInfo\Index.cshtml" />
     <Content Include="Views\UserInfo\_CommentsPartial.cshtml" />
     <Content Include="Views\Comix\ComixMaker.cshtml" />
     <Content Include="Views\Comix\Index.cshtml" />
-    <Content Include="Views\Home\PostLayout.cshtml" />
+    <Content Include="Views\Shared\PostLayout.cshtml" />
     <Content Include="Views\Shared\MedalPartial.cshtml" />
     <Content Include="Views\Comix\Creator.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\Error404.cshtml" />
+    <Content Include="Views\Comix\List.cshtml" />
+    <Content Include="Views\Comix\MyComixes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Views\Shared\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201605151045295_migrate1.resx">
+      <DependentUpon>201605151045295_migrate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151447468_mig2.resx">
+      <DependentUpon>201605151447468_mig2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605151502076_mg3.resx">
+      <DependentUpon>201605151502076_mg3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605152118162_mg4.resx">
+      <DependentUpon>201605152118162_mg4.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Resource.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.en.Designer.cs</LastGenOutput>

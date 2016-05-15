@@ -3,15 +3,15 @@
 <div class="post">
     <div class="row post-header">
         <div class="col-xs-1 avatar-div">
-            <a href="#"> <img src=@Model.Author.Photo class="img-circle avatar center-block" alt=@Model.Author.Name /></a>
+            <a href="#"> <img src=@Model.Comix.Author.Photo class="img-circle avatar center-block" alt=@Model.Comix.Author.Login /></a>
         </div>
         <div class="col-xs-7 non-padding">
             <div class="post-info">
                 <h2>
-                    <a href="#">@Model.Name</a>
+                    <a href="@Url.Action("Index", "Comix", new { id = Model.Comix.Id})">@Model.Comix.Name</a>
                     <img src=@Model.MPAARating.Photo class="mpaa-image" alt=@Model.MPAARating.Description title=@Model.MPAARating.Description />
                 </h2>
-                <a href="#">@Model.Author.Name</a> | @Model.CreateTime
+                <a href="#">@Model.Comix.Author.Login</a> | @Model.Comix.DateCreated
             </div>
         </div>
         <div class="col-xs-4 rating">           
@@ -27,9 +27,11 @@
                             int averageRating = (int)Math.Round(Model.Rating);
                             if (Model.UserRating != 0) { averageRating = (int)Model.UserRating; }
                             string Checked = "";
-                            string Id = Model.Id.ToString() + "-" + i.ToString();
+                            string disable = "disabled";
+                            if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Comix.Author.Login) { disable = ""; }
+                            string Id = Model.Comix.Id.ToString() + "-" + i.ToString();
                             if (i == averageRating) { Checked = "checked"; }
-                            <input class="@Class" id=@Id @Checked type="radio" data-id=@Model.Id onchange="RatingChange(this)" data-value=@i name="star" />
+                            <input class="@Class" id=@Id @Checked @disable type="radio" data-id=@Model.Comix.Id onchange="RatingChange(this)" data-value=@i name="star" />
                             <label class="@Class" for=@Id></label>
                         }
                     }
@@ -40,14 +42,14 @@
     </div>
     <div style="text-align: center">
         <div class="wrapper">
-            <div class="main-form center-block" id="main-form" style="background:#@Model.Pages[0].Background">
-                @Html.Raw(Model.Pages[0].Preview)
+            <div class="main-form center-block" id="main-form" style="background:#@Model.Comix.CoverPage.Background">
+                @Html.Raw(Model.Comix.CoverPage.Preview)
             </div>
         </div>
     </div>
     <div class="tags-container">
         Tags:
-        @{ foreach (var i in Model.Tags)
+        @{ foreach (var i in Model.Comix.Tags)
             {
                 <div class="tag" id=@i.Name><a href="@Url.Action("FindComixByTag", "Home",new {tag = i.Name })">@i.Name</a></div>}
         }

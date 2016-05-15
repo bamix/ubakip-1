@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Data.Entity;
+using System.Web;
 using System.Web.Mvc;
 
 namespace ubakip
@@ -8,7 +9,7 @@ namespace ubakip
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new System.Web.Mvc.AuthorizeAttribute());
+            filters.Add(new System.Web.Mvc.AuthorizeAttribute());           
         }
     }
 }

@@ -51,9 +51,6 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("New", "Index", "Home")</li>
                     <li>@Html.ActionLink("Popular", "Index", "Home")</li>
-                    @*<li>@Html.ActionLink("Comics", "Index", "Comix")</li>
-                    <li>@Html.ActionLink("ComicsMaker", "ComixMaker", "Comix")</li>
-                    <li>@Html.ActionLink(Resources.Resource.User, "Index", "UserInfo")</li>*@
                 </ul>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right"> 
@@ -81,6 +78,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a></li>
                                     <li>@Html.ActionLink("Profile", "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
+                                    <li><a href="@Url.Action("MyComixes", "Comix")">My comixes</a></li>
                                     <li><a href="@Url.Action("Logout", "Account")">Log Out</a></li>
                                 </ul>
                             </li>                            

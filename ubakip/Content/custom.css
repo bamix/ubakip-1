@@ -307,3 +307,39 @@ div.user-rating {
     right: 0;
     border-width: 0 0 10px 10px;
 }
+
+
+.delete {
+    position: absolute;
+    right: 0px;
+    top: 3px;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity = 0);   
+    width: 20px;
+    line-height: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 11px;
+    border: 0;
+    color: #EE5757;
+    background-color: #eee;
+    border-radius: 3px;
+    cursor: pointer;
+    -webkit-transition: opacity .2s ease;
+    -moz-transition: opacity .2s ease;
+    -o-transition: opacity .2s ease;
+    -ms-transition: opacity .2s ease;
+    transition: opacity .2s ease;
+}
+
+
+
+.delete:hover {
+    color: #fff;
+    background-color: #ffa0a3;
+}
+
+.delete:active {
+    color: #fff;
+    background-color: #EE5757;
+}

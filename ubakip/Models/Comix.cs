@@ -7,14 +7,26 @@ namespace ubakip.Models
 {
     public class Comix
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Author { get; set; }
+        public User Author { get; set; }
 
         public DateTime DateCreated { get; set; }
 
-        public string Rating { get; set; }
+        public int MPAARatingId { get; set; }
+
+        public virtual Page CoverPage { get; set; }
+
+        public virtual ICollection<Page> Pages { get; set; }
+
+        public virtual ICollection<Tag> Tags { get; set; }
+
+        public Comix()
+        {
+            Pages = new List<Page>();
+            Tags = new List<Tag>();
+        }
     }
 }

@@ -1,21 +1,24 @@
 ﻿@model ubakip.Models.Post
-<script src="~/Scripts/drag-and-drop-pages.js"></script>
+
+<script src="~/Scripts/comixCreator.js"></script>
 <script src="~/Scripts/sortable.min.js"></script>
 <script src="~/Scripts/ng-tags-input.min.js"></script>
 <link href="~/Content/ng-tags-input.min.css" rel="stylesheet" />
+<script src="~/Scripts/sanitize.js"></script>
+
 <div ng-app="sortableApp" ng-controller="sortableController" ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model))'>
 
-   <label>Name:</label> <input type="text" name="name" id="name" value={{name}} class="form-control" placeholder="Comix name">
+   <label>Name:</label><br />
+     <input ng-model="name" id="name" placeholder="Comix name"><br />
    <label>Tags:</label> <tags-input ng-model="tagsText">
         <auto-complete source="loadTags($query)" min-length="0"
                      load-on-focus="true"
                      load-on-empty="true"
                      max-results-to-show="32"></auto-complete></tags-input>
     <label>Rating:</label> <p>
-        <select size="1" name="MPAA rating">
-            @foreach (var item in ViewBag.AvailableMPAARatings)
-            {
-                <option selected=@(item.Id == Model.MPAARating.Id) value=@item.Id>@item.Description</option>
+        <select size="1" name="MPAA rating" ng-model="ratingId">
+            @for (int i = 0; i < ViewBag.AvailableMPAARatings.Count; i++)            {
+                <option selected=@(ViewBag.AvailableMPAARatings[i].Description == Model.MPAARating.Description) value=@i>@ViewBag.AvailableMPAARatings[i].Description</option>
             }
         </select>
     </p>
@@ -25,16 +28,25 @@
             <input type="checkbox" ng-model='publish'>Published
         </label>
     </div>
-        <button type="button" class="btn btn-success">Save</button>
-    <button type="button" class="btn btn-success">Add page</button> 
-        <div class="pages-container" id="sortable" ng-model="pages">           
-            <div ng-class="{'list-group-item': true, 'cover': page.id == coverPageId, 'page-preview' :page.id != coverPageId}" id={{page.id}} ng-repeat="page in pages">
-               <img class="img-responsive center-block" ng-src={{page.preview}}>
-            </div>
+    <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("CreateNewPage", "Comix", new { comixId = Model.Comix.Id })'">Add page</button> 
+    <button type="button" class="btn btn-success" id="save">Save</button> 
+        <div class="pages-container" id="sortable" ng-model="pages">    
+            @{
+                foreach (var p in Model.Comix.Pages)
+                {
+                    <div style="text-align: center" class="list-group-item page-preview" id=@p.Id >                        
+                            <div class="wrapper"  onclick="location.href='@Url.Action("ComixMaker", "Comix", new { pageId = p.Id })'">
+                                <div class="main-form center-block" id="main-form" style="background:#@p.Background">
+                                    @Html.Raw(p.Preview)                               
+                                </div>
+                            </div>   
+                        <button class="delete">&#10005;</button>
+                                    
+                   </div>
+                }
+            }   
         </div>
     </div>
-<script>
 
-</script>
 
 

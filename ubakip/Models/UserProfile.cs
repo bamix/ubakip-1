@@ -13,12 +13,12 @@ namespace ubakip.Models
 
         public List<Medal> Medals { get; set; }
 
-        public List<Comments> Comments { get; set; }
+        public List<Comment> Comments { get; set; }
         
         public UserProfile()
         {
             this.Medals = new List<Medal>();
-            this.Comments = new List<Models.Comments>();
+            this.Comments = new List<Models.Comment>();
         }
     }
 }

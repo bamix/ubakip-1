@@ -8,9 +8,9 @@
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    margin-top:20px;
+    margin-top: 20px;
     padding-left: 15px;
-    padding-right: 15px;  
+    padding-right: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -33,19 +33,17 @@ textarea {
     src: local('BuxtonSketch'), url('../fonts/BuxtonSketch.woff') format('woff'), url('../fonts/BuxtonSketch.ttf') format('truetype');
 }
 
-.navbar-collapse {   
-    
+.navbar-collapse {
 }
 
 .navbar-brand {
     font-size: 36px;
-    font-family: BuxtonSketch;    
-    color:black;
+    font-family: BuxtonSketch;
+    color: black;
 }
 
-#usrlbl{
-    font-family: cursive;  
-
+#usrlbl {
+    font-family: cursive;
 }
 
 
@@ -54,11 +52,20 @@ textarea {
     font-size: larger;
 }
 
-.navtext {
-    /*color: black;*/  
+#admin-info {
+    text-align: center;
+    font-size: larger;
+    padding: 10px 10px 10px 10px;
+    background-color: #fff;
+    border: 1px solid;
+    border-color: #000;
 }
 
-
+hr.styled {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
 
 /*#login-dp {
     min-width: 250px;

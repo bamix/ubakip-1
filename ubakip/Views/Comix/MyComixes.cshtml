@@ -1,0 +1,14 @@
+﻿@model ubakip.Models.ComixesRepository
+<script src="~/Scripts/VideoController.js"></script>
+
+<div class="content" id="content">
+    @{
+        foreach (var p in Model.Posts)
+        {
+            Html.RenderPartial("PostLayout", p);
+        }
+    }
+</div>
+
+
+

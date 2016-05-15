@@ -15,9 +15,10 @@ namespace ubakip
         }
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<Comments> Comments { get; set; }
-        public DbSet<Cloud> Cloud { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Cloud> Clouds { get; set; }
         public DbSet<ImageCell> ImageCell { get; set; }
-        
+        public DbSet<Page> Pages { get; set; }
+
     }
 }

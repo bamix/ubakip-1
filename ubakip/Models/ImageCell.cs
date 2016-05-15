@@ -26,5 +26,7 @@ namespace ubakip.Models
         public string height { get; set; }
 
         public string width { get; set; }
+
+        public virtual Page Page { get; set; }
     }
 }

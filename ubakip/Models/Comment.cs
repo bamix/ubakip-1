@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ubakip.Models
 {
-    public class Comments
+    public class Comment
     {
         [Key]
         public int Id { get; set; }
@@ -16,8 +16,8 @@ namespace ubakip.Models
 
         public DateTime DateCreated { get; set; }
 
-        public Users FromUser { get; set; }
+        public virtual User FromUser { get; set; }
 
-        public int ToUserId { get; set; }
+        public virtual User ToUser { get; set; }
     }
 }

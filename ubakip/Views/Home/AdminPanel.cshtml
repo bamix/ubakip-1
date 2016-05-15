@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<ubakip.Models.Users>
 
-
 <table style="background-color: #fff;" class="table table-bordered table-condensed">
     <thead>
         <tr>
             <th style="text-align: center;">Id</th>
-            <th style="text-align: center;">Name</th>
+            <th style="text-align: center;">Login</th>
+            <th style="text-align: center;">First Name</th>
+            <th style="text-align: center;">Last Name</th>
             <th style="text-align: center;">Email</th>
-            <th style="text-align: center;">Passwd</th>
             <th style="text-align: center;">Access level</th>
             <th style="text-align: center;">Language</th>
+            <th style="text-align: center;">Reset Password</th>
+            <th style="text-align: center;">Droped pw</th>
+            <th style="text-align: center;">Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -17,19 +20,17 @@
         {
             <tr>
                 <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Id)</td>
-                <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Name)</td>
+                <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Login)</td>
+                <td style="text-align:center;">@Html.DisplayFor(modelItem => item.FirstName)</td>
+                <td style="text-align:center;">@Html.DisplayFor(modelItem => item.LastName)</td>
                 <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Email)</td>
-                <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Password)</td>
                 <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Role)</td>
                 <td style="text-align:center;">@Html.DisplayFor(modelItem => item.Lang)</td>
+                <td style="text-align:center;"><a href="@Url.Action("Reset", "Home")/@Html.DisplayFor(modelItem => item.Id)">Reset</a></td>
+                <td style="text-align:center;">@if (item.Password == null) { Html.Raw("Something");}</td><!--ISN'T WOKING, NO ANY TEXT SHOWING-->
+                <td style="text-align:center;"><a href="@Url.Action("Delete", "Home")/@Html.DisplayFor(modelItem => item.Id)">Delete</a></td>
             </tr>
         }
     </tbody>
 </table>
-
-<p style="text-align: center;
-font-size: larger;
-padding: 10px 10px 10px 10px;
-background-color:#fff;
-border: 1px solid;
-border-color: #000;">Access levels: 1 - User, 2 - Admin</p>
+<p id="admin-info">Access levels: 1 - User, 2 - Admin</p>

@@ -1,21 +1,27 @@
 ﻿using System;
-using System.Web;
+using System.Linq;
 using System.Web.Mvc;
 using ubakip.Models;
-
+using MultilingualSite.Filters;
 namespace ubakip.Controllers
 {
+    [Culture]
     public class UserInfoController : Controller
     {
+        public static string GetThumbanil(string pictureUrl)
+        {
+            return (pictureUrl.Substring(0, 49) + "c_fill,h_50,q_50,r_4,w_50/" + pictureUrl.Substring(49));
+        }
+
         [HttpGet]
         public ActionResult Index()
         {
-            Comments comment = new Comments()
+            Comment comment = new Comment()
             {
                 Text = "123",
                 Id = 1,
                 DateCreated = DateTime.Now,
-                FromUser = new Users() { Name = "bamix" , Photo = "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg" }
+               // FromUserId = new Users() { Login = "bamix", Photo = GetThumbanil("http://res.cloudinary.com/ubakip-ru/image/upload/v1463227450/3DClFMPdBSk_eb8izm.jpg") }
             };
 
             Medal medal = new Medal()
@@ -27,70 +33,80 @@ namespace ubakip.Controllers
             {
                 UserInfo = new UserInfo()
                 {
-                    FirstName = "Alex",
-                    LastName = "Ignatyev",
                     About = "kek",
                     Rating = 3.4f
                 },
-                User = new Users()
-                {
-                    Id = 123,
-                    Name = "testName",
-                    Photo = "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg"
-                }
+                User = new Users() { }
             };
 
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Medals.Add(medal);
-            author.Comments.Add(comment);
-            author.Comments.Add(comment);
-            author.Comments.Add(comment);
-            author.Comments.Add(comment);
-            author.Comments.Add(comment);
-            author.Comments.Add(comment);
+            /*User's Info*/
+            using (var db = new DataBaseConnection())
+            {
+                var id = db.Users.Where(u => u.Login == User.Identity.Name).FirstOrDefault().Id;
+                var photo = db.Users.Where(u => u.Id == id).FirstOrDefault().Photo;
+                var firstname = db.Users.Where(u => u.Id == id).FirstOrDefault().FirstName;
+                var lastname = db.Users.Where(u => u.Id == id).FirstOrDefault().LastName;
+
+                author.User.Id = id;
+
+                /*Names and login*/
+                if (firstname != null && lastname != null)
+                {
+                    author.User.FirstName = firstname;
+                    author.User.LastName = lastname;
+                    author.User.Login = User.Identity.Name;
+                }
+                else
+                    author.User.FirstName = User.Identity.Name;
+
+                /*Photo*/
+                if (photo == null)
+                    author.User.Photo = "http://res.cloudinary.com/ubakip-ru/image/upload/v1463169215/nouser.jpg"; // Blank Picture
+                else
+                    author.User.Photo = photo;
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                author.Medals.Add(medal);
+                author.Comments.Add(comment);
+            }
+
             return View(author);
         }
 
         [HttpPost]
         public JsonResult SendComment(string text, int toUserId)
-        {          
-          using (var db = new MainDbContext())
+        {
+            using (var db = new DataBaseConnection())
+            {
+                if (text != null && text.Length > 4)
                 {
-                    if (text != null && text.Length > 4)
-                    {
                     //  var comment = db.Comments.Create();
-                    Comments comment = new Comments();
-                        comment.DateCreated = DateTime.Now;
-                        comment.Text = text;
+                    Comment comment = new Comment();
+                    comment.DateCreated = DateTime.Now;
+                    comment.Text = text;
                     // TODO add fromUser and toUserId 
                     // db.Comments.Add(comment);
                     // db.SaveChanges();
-                    comment.FromUser = new Users() { Name = "testname2", Photo = "http://podrobnosti.ua/media/pictures/2016/1/16/thumbs/740x415/di-kaprio-javljaetsja-na-opredelennuju-dolju-russkim_rect_73964f9ad23fe44bdccc31d53472a745.jpg" };
+                    comment.FromUser = db.Users.Where(u => u.Login == User.Identity.Name).FirstOrDefault();
                     Random rnd = new Random();
-                    comment.Id = rnd.Next(2, 100);                  
-                   return Json(comment);                           
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }          
+                    comment.Id = rnd.Next(2, 100);
+                    return Json(comment);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         [HttpPost]
-        public ActionResult _CommentsPartial(Comments model)
+        public ActionResult _CommentsPartial(Comment model)
         {
             if (ModelState.IsValid)
             {
-                using (var db = new MainDbContext())
+                using (var db = new DataBaseConnection())
                 {
                     if (model.Text != null && model.Text.Length > 4)
                     {

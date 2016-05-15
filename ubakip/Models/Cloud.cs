@@ -13,6 +13,7 @@ namespace ubakip.Models
         public float posX { get; set; }
         public float posY { get; set; }
         public string width { get; set; }
-        public string height { get; set; }       
+        public string height { get; set; }
+        public virtual Page Page { get; set; }
     }
 }

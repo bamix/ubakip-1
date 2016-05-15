@@ -6,10 +6,11 @@ using System.Web.Mvc;
 using System.Security.Claims;
 using ubakip.CustomLibraries;
 using ubakip.Models;
-
+using MultilingualSite.Filters;
 namespace ubakip.Controllers
 {
     [AllowAnonymous]
+    [Culture]
     public class AccountController : Controller
     {
         [HttpGet]
@@ -18,59 +19,61 @@ namespace ubakip.Controllers
             return View();
         }
 
+        public void SignIn(string login, string email)
+        {
+            var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, login),
+                        new Claim(ClaimTypes.Email, email)}, "ApplicationCookie");
+            Request.GetOwinContext().Authentication.SignIn(identity);
+        }
+
         [HttpPost]
         public ActionResult Login(Users model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            using (var db = new MainDbContext())
+            using (var db = new DataBaseConnection())
             {
-                var emailCheck = db.Users.FirstOrDefault(u => u.Email == model.Email);
-                var getPassword = db.Users.Where(u => u.Email == model.Email).Select(u => u.Password);
-                var materializePassword = getPassword.ToList();
-                var password = materializePassword[0];
-                var decryptedPassword = CustomDecrypt.Decrypt(password);
+                var email_base = db.Users.FirstOrDefault(u => u.Email == model.Email);
 
-                if (model.Email != null && model.Password == decryptedPassword)
+                if (email_base == null)
+                    return View(model);
+                
+                var password_model = CustomEncrypt.Encrypt(model.Password);
+                var password_base = db.Users.Where(u => u.Email == model.Email).FirstOrDefault().Password;
+
+                if (password_base == null)
+                    return View(model);
+
+                if (model.Email != null && password_model == password_base)
                 {
-                    var getName = db.Users.Where(u => u.Email == model.Email).Select(u => u.Name);
-                    var materializeName = getName.ToList();
-                    var name = materializeName[0];
+                    var login = db.Users.Where(u => u.Email == model.Email).FirstOrDefault().Login;
+                    var email = db.Users.Where(u => u.Email == model.Email).FirstOrDefault().Email;
 
-                    var getEmail = db.Users.Where(u => u.Email == model.Email).Select(u => u.Email);
-                    var materializeEmail = getEmail.ToList();
-                    var email = materializeEmail[0];
-
-                    var identity = new ClaimsIdentity(new[] {
-                        new Claim(ClaimTypes.Name, name),
-                        new Claim(ClaimTypes.Email, email)
-                  },
-                  "ApplicationCookie");
-
-                    var ctx = Request.GetOwinContext();
-                    var authManager = ctx.Authentication;
-                    authManager.SignIn(identity);
+                    SignIn(login, email);
 
                     return RedirectToAction("Index", "Home");
                 }
+                else
+                {
+                    if(email_base != null && model.Email != null && password_base == null)
+                    {
+                        //create new password here
+                    }
+                }
             }
-            
+
             ModelState.AddModelError("", "Invalid email or password");
             return View(model);
         }
 
         public ActionResult Logout()
         {
-            var ctx = Request.GetOwinContext();
-            var authManager = ctx.Authentication;
-
-            authManager.SignOut("ApplicationCookie");
+            Request.GetOwinContext().Authentication.SignOut("ApplicationCookie");
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public ActionResult Registration()
         {
             return View();
@@ -81,33 +84,38 @@ namespace ubakip.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var db = new MainDbContext())
+                using (var db = new DataBaseConnection())
                 {
-                    var queryUser = db.Users.FirstOrDefault(u => u.Email == model.Email);
-                    if (queryUser == null)
+                    var queryEmail = db.Users.FirstOrDefault(u => u.Email == model.Email);
+                    var queryLogin = db.Users.FirstOrDefault(u => u.Login == model.Login);
+                    if (queryEmail == null && queryLogin == null)
                     {
                         var encryptedPassword = CustomEncrypt.Encrypt(model.Password);
                         var user = db.Users.Create();
                         user.Email = model.Email;
                         user.Password = encryptedPassword;
-                        user.Name = model.Name;
+                        user.Login = model.Login;
                         user.Role = 1;
-                        user.Lang = "RU";
+                        user.Lang = "ru";
+                        user.Theme = "light";
                         db.Users.Add(user);
                         db.SaveChanges();
+
+                        SignIn(user.Login, user.Email);
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
-                    {
                         return RedirectToAction("Registration");
-                    }
                 }
             }
             else
-            {
-                ModelState.AddModelError("", "One or more fields have been");
-            }
-            return View();
+                ModelState.AddModelError("", 
+                    "Registration error. Please check your input. " + 
+                    "It is worth noting that the login must consist of letters, " +
+                    "its length should be between 5 and 15 characters.");
+
+            return View(model);
         }
     }
 }

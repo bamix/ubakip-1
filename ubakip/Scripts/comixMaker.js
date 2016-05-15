@@ -17,69 +17,15 @@
     },
     isFirstLoad = true,
     countLoadedImages = 0;
-    //EmptyCloud = { id: null, type: null, text: "", posX: 0, posY: 0, width: 0, height: 0 };
+   
+
+    $scope.id;
 
     $scope.background = "000000";
 
-    $scope.images = [
-    //    {
-    //    src: "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
-    //    isVideo: false,
-    //    scale: 1,
-    //    rotate: 0,
-    //    posX: 0,
-    //    posY: 0,
-    //    cellId: "sq1",       
-    //    id: "1",
-    //    height:0,
-    //    width : 0
-    //},
-    //    {
-    //    src: "https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg",
-    //    isVideo: false,
-    //    scale: 1,
-    //    rotate: 90,
-    //    posX: 0,
-    //    posY: 0.4,
-    //    cellId: "sq2",        
-    //    id: "2",
-    //    height: 0,
-    //    width: 0
-    //},
-    //    {
-    //    src: "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4",
-    //    isVideo : true,
-    //    scale: 2,
-    //    rotate: 0,
-    //    posX: 0,
-    //    posY: 0,
-    //    cellId: "sq3",     
-    //    id: "3",
-    //    height: 0,
-    //    width: 0
-    //}
-    ];
+    $scope.images = [];
 
-    $scope.clouds = [
-     //   {
-     //       id: 0,
-     //       type: "cloud1",
-     //       text: "lol",
-     //       posX: 0,
-     //       posY: 0,
-     //       scaleX: "50%",
-     //       scaleY: "50%"
-     //   },
-     //{
-     //    id: 1,
-     //    type: "cloud2",
-     //    text: "kek",
-     //    posX: 0.2,
-     //    posY: 0.1,
-     //    scaleX: "30%",
-     //    scaleY: "30%"
-     //}
-    ];
+    $scope.clouds = [];
 
     $scope.template = "template1";
 
@@ -102,6 +48,7 @@
 
     $scope.Initialize = function (model) {
         if (model != null) {
+            $scope.id = model.id;
             $scope.images = model.imageCell;
             $scope.clouds = model.clouds;
             $scope.template = model.templateName;
@@ -179,6 +126,8 @@
 
     $("#main-form").delegate(".textarea", "input", function () {
         $scope.clouds[-$(this).parent().attr("id") - 1].text = $(this).val();
+        $(this).empty();
+        $(this).append($(this).val());
     });
 
     document.body.addEventListener('load', function (event) {//for image load
@@ -208,30 +157,31 @@
         if (countLoadedImages == 0) isFirstLoad = false;
     }
 
-    $(".btn").click(function () {
-        var id = $(this).attr("id");
-        if (id == "save") {
-            var page = {
-                Id: "0",
-                ImageCell: $scope.images,
-                Clouds: $scope.clouds,
-                TemplateName: $scope.template,
-                Background: $scope.background,
-                Preview: $("#main-form").html()
-            }
 
-            $.ajax({
-                type: 'POST',
-                url: "/Comix/SavePage",
-                dataType: 'text',
-                data: JSON.stringify(page),
-                contentType: "application/json; charset=utf-8",
-                traditional: true,
-                success: function (data) {
-                    alert("all good")
-                }
-            });
+
+    window.onbeforeunload = function (e) {
+           
+    };
+
+    $("#save").click(function () {
+        var page = {
+            Id: $scope.id,
+            ImageCell: $scope.images,
+            Clouds: $scope.clouds,
+            TemplateName: $scope.template,
+            Background: $scope.background,
+            Preview: $("#main-form").html()
         }
+
+        $.ajax({
+            type: 'POST',
+            url: "/Comix/SavePage",
+            dataType: 'text',
+            data: JSON.stringify(page),
+            contentType: "application/json; charset=utf-8",
+            traditional: true,
+            success: function (data) { }
+        });
     });
 
     $(".btn-template").click(function () {
@@ -243,49 +193,78 @@
         var id = $(this).attr("id"),
             CloudId = $scope.clouds.length + 1;
         AddCloud(CloudId, id, "");
-        $scope.clouds.push({ id: CloudId, type: id, text: "", posX: 0, posY: 0, width: "20%", height: "20%" });
+        $scope.clouds.push({ id: 0, type: id, text: "", posX: 0, posY: 0, width: "20%", height: "20%" });
     });
 
     window.onload = function () {
-        $(".cell").bind("dragover", function (e) {
+        InitDrop();
+    };
+
+    function InitDrop()
+    {
+        $(".cell").on("dragover", function (e) {
             if (e.preventDefault) e.preventDefault();
             if (e.stopPropagation) e.stopPropagation();
         });
 
-        $(".cell").bind("dragenter", function (e) {
+        $(".cell").on("dragenter", function (e) {
 
         });
 
-        $(".cell").bind("dragleave", function (e) {
+        $(".cell").on("dragleave", function (e) {
 
         });
 
-        $(".cell").bind("drop", function (e) {
+        $(".cell").on("drop", function (e) {
             if (e.preventDefault) e.preventDefault();
             if (e.stopPropagation) e.stopPropagation();
             var file = event.dataTransfer.files[0];
-            ReadFileTo(file, $(this).find(".image-cell"))         
+            ReadFileTo(file, $(this).find("img"))
         });
-    };
+    }
 
     function ReadFileTo(file,place)
     {
         var fileValid = CheckFile(file);
         if (!fileValid.isValid) return;
-        var reader = new FileReader();       
-        console.log(file);
+        var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = function () {
-            UpdateImage(reader.result, fileValid.IsVideo, place.attr("id"));
+            if ($(place).hasClass("background-cell")) var imageId = LoadNewImage(reader.result, fileValid.IsVideo, $(place).closest(".cell").attr("id"));
+            else { imageId = place.attr("id"); UpdateImage(reader.result, fileValid.IsVideo, imageId); }
             $.ajax({
                 type: 'POST',
                 url: "/Comix/Upload",
                 data: { data: reader.result },
                 success: function (newUrl) {
-                    $scope.images[place.attr("id")].src = newUrl;
+                    $scope.images[imageId].src = newUrl;
                 }
             });
         }
+    }
+
+    function LoadNewImage(src, isVideo, cellId)
+    {
+        $scope.images.push({
+                src: src,
+                isVideo: isVideo,
+                scale: 1,
+                rotate: 0,
+                posX: 0,
+                posY: 0,
+                cellId: cellId,
+                id: null,
+                height:0,
+                width : 0});
+        var id = $scope.images.length - 1;
+        LoadImage(id, $scope.images[id]);
+        return id;
+    }
+
+    function UpdateImage(newUrl, isVideo, imageId) {
+        $scope.images[imageId].src = newUrl;
+        $scope.images[imageId].isVideo = isVideo;
+        LoadImage(imageId, $scope.images[imageId]);
     }
 
     function CheckFile(file)
@@ -315,6 +294,7 @@
                 LoadImages();
                 LoadCellBackground();
                 LoadClouds();
+                InitDrop();
             }
         });
     }
