@@ -165,24 +165,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MainDb1Context.cs" />
-    <Compile Include="Migrations\201605151045295_migrate1.cs" />
-    <Compile Include="Migrations\201605151045295_migrate1.Designer.cs">
-      <DependentUpon>201605151045295_migrate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201605151447468_mig2.cs" />
-    <Compile Include="Migrations\201605151447468_mig2.Designer.cs">
-      <DependentUpon>201605151447468_mig2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201605151502076_mg3.cs" />
-    <Compile Include="Migrations\201605151502076_mg3.Designer.cs">
-      <DependentUpon>201605151502076_mg3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201605152118162_mg4.cs" />
-    <Compile Include="Migrations\201605152118162_mg4.Designer.cs">
-      <DependentUpon>201605152118162_mg4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cloud.cs" />
     <Compile Include="Models\Cloudinary.cs" />
     <Compile Include="Models\Comix.cs" />
@@ -315,9 +297,7 @@
     <Content Include="Views\Home\AdminPanel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Registration.cshtml" />
-    <Content Include="Views\UserInfo\Comments.cshtml" />
     <Content Include="Views\UserInfo\Index.cshtml" />
-    <Content Include="Views\UserInfo\_CommentsPartial.cshtml" />
     <Content Include="Views\Comix\ComixMaker.cshtml" />
     <Content Include="Views\Comix\Index.cshtml" />
     <Content Include="Views\Shared\PostLayout.cshtml" />
@@ -326,11 +306,8 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Error404.cshtml" />
     <Content Include="Views\Comix\List.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Comix\MyComixes.cshtml" />
-=======
     <Content Include="Views\UserInfo\Edit.cshtml" />
->>>>>>> 305fb4c09f1f69fab00900089d3717f1754f112f
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -340,18 +317,6 @@
     <Folder Include="Views\Shared\templates\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201605151045295_migrate1.resx">
-      <DependentUpon>201605151045295_migrate1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201605151447468_mig2.resx">
-      <DependentUpon>201605151447468_mig2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201605151502076_mg3.resx">
-      <DependentUpon>201605151502076_mg3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201605152118162_mg4.resx">
-      <DependentUpon>201605152118162_mg4.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Resource.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.en.Designer.cs</LastGenOutput>

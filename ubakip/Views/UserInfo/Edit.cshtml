@@ -15,14 +15,16 @@
             </div>
         </div>
     </div>
-    <div class="row" style="width:100%">
-        <div class="col-lg-8 col-lg-offset-2" style="align-content:center; align-items:center; text-align:center; width:100%">
-            <div class="form-group" style="width:100%">
-                @Html.EditorFor(u => u.UserInfo.About, new { htmlAttributes = new { @class = "form-control", id = "commentbox", style = "width: 100%;", rows = "10", placeholder = "About" } })
+    <div class="row">
+        <div class="col-md-6 col-lg-offset-3">
+            <div class="form-group" style="display: inline-block;">
+                @Html.LabelFor(u => u.UserInfo.About, "About:")
+                @Html.TextAreaFor(u => u.UserInfo.About, 8, 40, new { @class = "form-control", placeholder = "About" })
             </div>
         </div>
     </div>
     <div class="row">
+        <h2>User photo</h2>
         <div class="col-lg-8 col-lg-offset-2">
             <div class="form-group" style="display: inline-block;">
                 <h4>Select file:</h4><br />
@@ -37,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
-            <button class="btn btn-info" type="submit">SIGN UP</button>
+            <button class="btn btn-info" type="submit">Save</button>
         </div>
     </div>
 </div>

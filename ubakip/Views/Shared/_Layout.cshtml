@@ -77,7 +77,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="@Url.Action("AdminPanel", "Home")">Admin Panel</a></li>
-                                    <li>@Html.ActionLink("Profile", "Index", "UserInfo", new { area = "" }, new { @id = "usrlbl" })</li>
+                                    <li>@Html.ActionLink("Profile", "Index", "UserInfo", new { name = User.Identity.Name }, null)</li>
                                     <li><a href="@Url.Action("MyComixes", "Comix")">My comixes</a></li>
                                     <li><a href="@Url.Action("Logout", "Account")">Log Out</a></li>
                                 </ul>

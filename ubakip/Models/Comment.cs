@@ -18,6 +18,6 @@ namespace ubakip.Models
 
         public virtual User FromUser { get; set; }
 
-        public virtual User ToUser { get; set; }
+        public virtual int ToUser { get; set; }
     }
 }

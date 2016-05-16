@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,28 +17,6 @@ namespace ubakip.Controllers
         public ActionResult Login()
         {
             return View();
-=======
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Security.Claims;
-using ubakip.CustomLibraries;
-using ubakip.Models;
-using MultilingualSite.Filters;
-
-namespace ubakip.Controllers
-{
-    [AllowAnonymous]
-    [Culture]
-    public class AccountController : Controller
-    {
-        [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
->>>>>>> 305fb4c09f1f69fab00900089d3717f1754f112f
         }
 
         public void SignIn(string login, string email)
