@@ -22,9 +22,9 @@ namespace ubakip.Controllers
         public ActionResult Index(int id)
         {           
            if(id==0 || isAuthor(id)) return RedirectToAction("Creator", new { id = id });
-
-            Post post = GetTestPost();           
-           
+            List<Comix> comixes = new List<Comix>();
+            comixes.Add(LoadComixById(id));
+            Post post = MakePostsFromComixes(comixes).FirstOrDefault();              
             return View(post);
         }
         
@@ -41,12 +41,10 @@ namespace ubakip.Controllers
 
         public ActionResult MyComixes()
         {
-
             ComixesRepository comixRepository = new ComixesRepository()
             {
                 Posts = MakePostsFromComixes(LoadComixesOfUser(User.Identity.Name))
             };
-
             return View(comixRepository);
         }
 
@@ -154,34 +152,6 @@ namespace ubakip.Controllers
             return View(post);
         }
 
-        [HttpPost]
-        [AcceptVerbs(HttpVerbs.Post)]
-        public void UploadDirect()
-        {
-            var headers = HttpContext.Request.Headers;
-
-            string content = null;
-            using (StreamReader reader = new StreamReader(HttpContext.Request.InputStream))
-            {
-                content = reader.ReadToEnd();
-            }
-
-            if (String.IsNullOrEmpty(content)) return;
-
-            Dictionary<string, string> results = new Dictionary<string, string>();
-
-            string[] pairs = content.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var pair in pairs)
-            {
-                string[] splittedPair = pair.Split('=');
-
-                if (splittedPair[0].StartsWith("faces"))
-                    continue;
-
-                results.Add(splittedPair[0], splittedPair[1]);
-            }
-        }
-
         private static Post GetTestPost()
         {
             List<Tag> tags = new List<Tag>();
@@ -233,10 +203,14 @@ namespace ubakip.Controllers
 
         private void FixPostApostrophr(Post post)
         {
-            post.Comix.CoverPage.Preview = post.Comix.CoverPage.Preview.Replace("'", "&#39");
+            post.Comix.CoverPage = null;
             post.Comix.Name = post.Comix.Name.Replace("'", "&#39");
             foreach (Page page in post.Comix.Pages)
+            {
                 FixApostroph(page);
+                page.Clouds = null;
+                page.ImageCell = null;
+            }
         }
 
         [HttpPost]
@@ -246,7 +220,9 @@ namespace ubakip.Controllers
             {
                 Page page = db.Pages
                     .Include(p=> p.Clouds)
+                    .Include(p => p.Clouds.Select(c=>c.Page))
                     .Include(p => p.ImageCell)
+                     .Include(p => p.ImageCell.Select(c => c.Page))
                     .FirstOrDefault(c => c.Id == id);               
                 if (page != null)
                 {
@@ -257,8 +233,26 @@ namespace ubakip.Controllers
                     if (comix.CoverPage.Id == id)
                         if (comix.Pages.Count == 1) comix.CoverPage = null;
                         else comix.CoverPage = ((List<Page>)comix.Pages)[1];
-                    db.Pages.Remove(page);
-                    db.SaveChanges();
+                    RemoveCloudsFromDatabase((List<Cloud>)page.Clouds);
+                    RemoveImagesFromDatabase((List<ImageCell>)page.ImageCell);
+                   Page removedPage = comix.Pages.FirstOrDefault(p => p.Id == page.Id);
+                    if(removedPage != null)
+                    {                        
+                        bool isGood = false;
+                        do
+                        {
+                            try
+                            {
+                                comix.Pages.Remove(removedPage);                               
+                                db.SaveChanges();
+                                isGood = true;
+                            }
+                            catch (Exception e)
+                            {
+                                isGood = false;
+                            }
+                        } while (!isGood);
+                    }                   
                 }
             }
             return Json(new { msg = "Successfully" });
@@ -409,8 +403,7 @@ namespace ubakip.Controllers
                
         public ActionResult ComixMaker(int pageId)
         {
-            Page page = pageId == 0 ? GetDefaultPage() : LoadPage(pageId);
-            //  ViewBag.Cloudinary = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "false" } });
+            Page page = pageId == 0 ? GetDefaultPage() : LoadPage(pageId);           
             //TODO check if user is author
             FixApostroph(page);
             page.Preview = null;
@@ -444,9 +437,7 @@ namespace ubakip.Controllers
         [HttpPost]
         public ActionResult SaveComix(Comix comix)
         {
-           if(comix.Pages!=null && comix.Pages.Count>0) comix.CoverPage = ((List<Page>)comix.Pages)[0];
-                   
-            comix.DateCreated = DateTime.Now;
+            if (comix.Pages != null && comix.Pages.Count != 0) comix.CoverPage = LoadPreviewPage(((List<Page>)comix.Pages)[0].Id);       
             SaveComixToDatabase(comix);
             return Json(new { msg = "Successfully added " });
         }
@@ -454,27 +445,28 @@ namespace ubakip.Controllers
         [HttpPost]
         public ActionResult GetTag(string quote)
         {
-            //TODO Load tags from bd
             List<Tag> tags = new List<Tag>();
-            Tag tag1 = new Tag() { Name = "tag1" };
-            Tag tag2 = new Tag() { Name = "tag2" };
-            Tag tag3 = new Tag() { Name = "tag3" };
-            Tag tag4 = new Tag() { Name = "tag4" };
-            Tag tag5 = new Tag() { Name = "tag5" };
-            tags.Add(tag1);
-            tags.Add(tag2);
-            tags.Add(tag3);
-            tags.Add(tag4);
-            tags.Add(tag5);
-            return Json(tags);
+            using (var db = new DataBaseConnection())
+            {
+               tags = db.Tags.Where(t => t.Name.StartsWith(quote)).ToList();
+            }
+            List<string> tagsStr = new List<string>();
+            foreach (var tag in tags)
+                tagsStr.Add(tag.Name);
+           return Json(tagsStr);
         }
 
         [HttpPost]
         public string Upload(string data)
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 28e1f9d133626d412c6e278820e45e02574cba7d
         {           
             CloudinaryDotNet.Account account = new CloudinaryDotNet.Account("ubakip-ru", "558288263223776", "IqzfFUQdOiwxYab-wi0a_ppyO-A"); 
             CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account); 
             CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() 
+<<<<<<< HEAD
             {
                 File = new CloudinaryDotNet.Actions.FileDescription(data)
             };
@@ -482,29 +474,145 @@ namespace ubakip.Controllers
             return cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
         }
 
+        private Page LoadPreviewPage(int pageId)
+        {
+            Page page = new Page();
+            using (var db = new DataBaseConnection())
+            {
+                page = db.Pages.FirstOrDefault(p => p.Id == pageId);
+            }
+            if (page == null) { page = new Page();
+                page.Preview = "No preview";
+            }
+            return page;
+        }
         private void SaveTags(Comix comix)
         {
             using (var db = new DataBaseConnection())
             {
-                foreach (Tag tag in comix.Tags)
+                DeleteOldTags(db.Comixes.Include(c=>c.Tags).FirstOrDefault(c=> c.Id== comix.Id), db);
+                int count = comix.Tags.Count;
+                for(int i=0; i<count; i++)
                 {
+                    Tag tag = ((List<Tag>)comix.Tags)[i];
                     Tag dbTag = db.Tags
                         .Include(t=> t.Comixes)
                         .FirstOrDefault(t => t.Name == tag.Name);                    
                     if (dbTag != null)
                     {
-                        if(dbTag.Comixes != null && dbTag.Comixes.Any(c=>c.Id == comix.Id))
-                        dbTag.Count++;
-                        db.Entry<Tag>(dbTag).State = EntityState.Modified;
+                        if(dbTag.Comixes != null && !dbTag.Comixes.Any(c=>c.Id == comix.Id))
+                        {
+                            dbTag.Count++;
+                            dbTag.Comixes.Add(comix);
+                            db.Entry<Tag>(dbTag).State = EntityState.Modified;
+                        }                       
                     }
                     else
                     {
-                        tag.Comixes.Add(comix);
+                       // tag.Comixes.Add(comix);
                         db.Tags.Add(tag);
                     }
-                }
+                    db.Comixes.FirstOrDefault(c => c.Id == comix.Id).Tags.Add(tag);
+                }               
                 db.SaveChanges();
             }                
+        }
+
+        private void DeleteOldTags(Comix comix, DataBaseConnection db)
+        {            
+            List<Tag> oldTags = (List<Tag>)db.Comixes.Include(t => t.Tags).Include(c => c.Tags.Select(t => t.Comixes)).FirstOrDefault(c => c.Id == comix.Id).Tags;
+            for(int i=0; i< oldTags.Count; i++) {
+                oldTags[i].Count--;
+                Tag tag = comix.Tags.FirstOrDefault(t => t.Id == oldTags[i].Id);
+                tag = null;
+                if (oldTags[i].Count == 0)
+                {
+                    db.Entry(oldTags[i]).State = System.Data.Entity.EntityState.Deleted;
+                    i--;
+                }                                      
+             
+            }
+            db.SaveChanges();
+=======
+            {
+                File = new CloudinaryDotNet.Actions.FileDescription(data)
+            };
+            CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);                                                                                                                                         
+            return cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
+        }
+
+        private Page LoadPreviewPage(int pageId)
+        {
+            Page page = new Page();
+            using (var db = new DataBaseConnection())
+            {
+                page = db.Pages.FirstOrDefault(p => p.Id == pageId);
+            }
+            if (page == null) { page = new Page();
+                page.Preview = "No preview";
+            }
+            return page;
+        }
+        private void SaveTags(Comix comix)
+        {
+            using (var db = new DataBaseConnection())
+            {
+                DeleteOldTags(db.Comixes.Include(c=>c.Tags).FirstOrDefault(c=> c.Id== comix.Id), db);
+                int count = comix.Tags.Count;
+                for(int i=0; i<count; i++)
+                {
+                    Tag tag = ((List<Tag>)comix.Tags)[i];
+                    Tag dbTag = db.Tags
+                        .Include(t=> t.Comixes)
+                        .FirstOrDefault(t => t.Name == tag.Name);                    
+                    if (dbTag != null)
+                    {
+                        if(dbTag.Comixes != null && !dbTag.Comixes.Any(c=>c.Id == comix.Id))
+                        {
+                            dbTag.Count++;
+                            dbTag.Comixes.Add(comix);
+                            db.Entry<Tag>(dbTag).State = EntityState.Modified;
+                        }                       
+                    }
+                    else
+                    {
+                       // tag.Comixes.Add(comix);
+                        db.Tags.Add(tag);
+                    }
+                    db.Comixes.FirstOrDefault(c => c.Id == comix.Id).Tags.Add(tag);
+                }               
+                db.SaveChanges();
+            }                
+        }
+
+        private void DeleteOldTags(Comix comix, DataBaseConnection db)
+        {            
+            List<Tag> oldTags = (List<Tag>)db.Comixes.Include(t => t.Tags).Include(c => c.Tags.Select(t => t.Comixes)).FirstOrDefault(c => c.Id == comix.Id).Tags;
+            for(int i=0; i< oldTags.Count; i++) {
+                oldTags[i].Count--;
+                Tag tag = comix.Tags.FirstOrDefault(t => t.Id == oldTags[i].Id);
+                tag = null;
+                if (oldTags[i].Count == 0)
+                {
+                    db.Entry(oldTags[i]).State = System.Data.Entity.EntityState.Deleted;
+                    i--;
+                }                                      
+             
+            }
+            db.SaveChanges();
+=======
+        {
+            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account("ubakip-ru", "558288263223776", "IqzfFUQdOiwxYab-wi0a_ppyO-A");
+            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account);
+            CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams()
+            {
+                File = new CloudinaryDotNet.Actions.FileDescription(data)
+            };
+            CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);
+            string url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
+            return url;
+>>>>>>> 305fb4c09f1f69fab00900089d3717f1754f112f
+>>>>>>> 28e1f9d133626d412c6e278820e45e02574cba7d
         }
 
         private void SavePageToDatabase(Page page)
@@ -525,7 +633,6 @@ namespace ubakip.Controllers
                       .Include(x => x.Clouds)
                       .Include(x => x.ImageCell)                     
                       .Single(c => c.Id == newPage.Id);
-
             db.Entry(oldPage).CurrentValues.SetValues(newPage);                  
         }
 
@@ -551,14 +658,38 @@ namespace ubakip.Controllers
         private void RemoveCloudsFromDatabase(List<Cloud> clouds)
         {
             using (var db = new DataBaseConnection())
-            {
-                foreach (var cloud in clouds)
+            {                
+                for (int i=0;i< clouds.Count; i++)               
                 {
-                    Cloud cloudToRemove = db.Clouds.FirstOrDefault(c => c.id == cloud.id);
-                    if (cloudToRemove!=null)
-                        db.Entry(cloudToRemove).State = System.Data.Entity.EntityState.Deleted;
+                    int cloudId = clouds[i].id;
+                    Cloud cloudToRemove = db.Clouds.FirstOrDefault(c => c.id == cloudId);
+                    if (cloudToRemove != null)
+                    {
+                        db.Clouds.Remove(cloudToRemove);
+                        db.SaveChanges();
+                        clouds.RemoveAt(0);
+                        i--;
+                    }
+                }              
+            }
+        }
+
+        private void RemoveImagesFromDatabase(List<ImageCell> images)
+        {
+            using (var db = new DataBaseConnection())
+            {
+                for (int i = 0; i < images.Count; i++)
+                {
+                    int imageId = images[i].id;
+                    ImageCell imageToRemove = db.ImageCells.FirstOrDefault(c => c.id == imageId);
+                    if (imageToRemove != null)
+                    {
+                        db.ImageCells.Remove(imageToRemove);
+                        db.SaveChanges();
+                        images.RemoveAt(0);
+                        i--;
+                    }
                 }
-                db.SaveChanges();
             }
         }
 
@@ -626,17 +757,17 @@ namespace ubakip.Controllers
         }
 
         private void UpdateComix(Comix newComix, DataBaseConnection db)
-        {
+        {           
             var oldComix = db.Comixes
                       .Include(x => x.Tags)
                       .Include(x => x.Pages)                   
                       .Include(x => x.CoverPage)
                       .Single(c => c.Id == newComix.Id);
+            List<Page> pages = new List<Page>();
+            foreach (var p in newComix.Pages)
+                pages.Add(db.Pages.FirstOrDefault(pa => pa.Id == p.Id));
             oldComix.CoverPage = db.Pages.Where(p => p.Id == newComix.CoverPage.Id).FirstOrDefault();
-            db.Entry(oldComix).CurrentValues.SetValues(newComix);
-            oldComix.Tags = new List<Tag>();
-            foreach (var tag in newComix.Tags)
-                oldComix.Tags.Add(tag);                 
+            db.Entry(oldComix).CurrentValues.SetValues(newComix);             
         }
         
     }

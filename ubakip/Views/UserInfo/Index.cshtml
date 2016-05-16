@@ -8,7 +8,15 @@
         <a href=@Model.User.Photo><img src=@Model.User.Photo class="img-responsive center-block" alt=@Model.User.Login /></a>
     </div>
     <div class="col-md-9 user-info">
-        <h1>@Model.User.FirstName @Model.User.LastName</h1>
+        <div class="row">
+            <div class="col-md-9">
+                <h1>@Model.User.FirstName @Model.User.LastName</h1>
+            </div>
+            <div class="col-md-3">
+                <h3 style="text-align:right;"><a href="@Url.Action("Edit", "UserInfo")">Edit profile</a></h3>
+            </div>
+        </div>
+
         <h3>@Model.User.Login</h3>
         <hr class="styled" />
         <h4>
@@ -24,7 +32,7 @@
                         string Checked = "";
                         if (i == averageRaring) { Checked = "checked"; }
                         <input class="@Class" id=@Star type="radio" name="star" @Checked disabled readonly />
-                            <label class="@Class" for=@Star></label>
+                        <label class="@Class" for=@Star></label>
                     }
                 }
             </form>
@@ -38,26 +46,23 @@
                 }
             }
         </div>
-
         <h4>About:</h4>
         @Model.UserInfo.About
     </div>
 </div>
-
 <div class="comment-editor" ng-app="CommentApp" ng-controller="CommentListController">
     <script src="~/Scripts/comment.js"></script>
     @if (@User.Identity.IsAuthenticated)
     {
-    <form id="MessageForm" ng-submit="addComment()"
-          ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Comments),@Model.User.Id)'>
-        <textarea ng-model="commentText" size="30" name="message" placeholder="add new comment"></textarea>
-        <br />
-        <input class="btn btn-success" type="submit" value="Send">
-    </form>
+        <form id="MessageForm" ng-submit="addComment()"
+              ng-init='Initialize(@ubakip.Controllers.JavaScriptConverterController.JavaScriptConvert.SerializeObject(Model.Comments),@Model.User.Id)'>
+            <textarea ng-model="commentText" size="30" name="message" placeholder="add new comment"></textarea>
+            <br />
+            <input class="btn btn-success" type="submit" value="Send">
+        </form>
     }
-
     <div masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".masonry-brick","column-width" : "300"}'>
-        <div  masonry-tile class="masonry-brick comment"  id={{comment.id}}  ng-repeat="comment in comments">
+        <div masonry-tile class="masonry-brick comment" id={{comment.id}} ng-repeat="comment in comments">
             <div class="comment-info">
                 <div class="avatar-div">
                     <img ng-src={{comment.fromUser.photo}} />
@@ -68,12 +73,10 @@
                 {{comment.text}}
             </div>
         </div>
-    </div>       
     </div>
-
+</div>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-

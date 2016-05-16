@@ -1,21 +1,15 @@
 ﻿angular.module('sortableApp', ['ui.sortable','ngTagsInput'])
 .controller('sortableController', function ($scope) {   
-    $scope.pages = [];
-    $scope.id;
-    $scope.name = "";
-    $scope.createTime;
+
+    $scope.id; 
     $scope.tags = [];
     $scope.tagsText = [];
     $scope.tagList = [];
-    $scope.publish = true;
-    $scope.ratingId;
+    $scope.dateCreate;
+
 
     $scope.Initialize = function (model) {
-        $scope.name = model.comix.name;
-        $scope.id = model.comix.id;
-        $scope.pages = model.comix.pages;
-        $scope.tags = model.comix.tags;
-        $scope.ratingId = model.comix.mpaaRatingId.toString();;
+        $scope.tags = model;
         $($scope.tags).each(function (index, value) {
             $scope.tagsText.push({ text: value.name });
         });
@@ -27,29 +21,33 @@
             url: "/Comix/GetTag",            
             data: { quote: $query},            
             success: function (data) {
-                $scope.tagList = [];
+                $scope.tagList=[];
                 $(data).each(function (index, value) {
-                    $scope.tagList.push( value.Name );
+                    if ($scope.tagList.indexOf(value) == -1)
+                    $scope.tagList.push( value );
                 });
             }
         });
         return $scope.tagList;
     };
 
-    window.onbeforeunload = function (e) {
-  
-    };
+
     
     $("#save").click(function () {
         var comix = {
-            Id: $scope.id,
-            Pages: $scope.pages,
+            Id: $("#page").attr("data-id"),
+            Pages: [],
             Tags:[],
-            Name: $scope.name,
-            MPAARatingId: $scope.ratingId
+            Name: $("#name").val(),
+            DateCreated: $("#page").attr("data-date"),
+            MPAARatingId:$( "#select" ).val()
         }
         $($scope.tagsText).each(function (index, value) {
             comix.Tags.push({ Id: 0, Count:1, Name: value.text });
+        });
+
+        $(".page-preview").each(function (index, value) {
+            comix.Pages.push({ Id: $(this).attr("id") });
         });
 
         $.ajax({
@@ -72,7 +70,7 @@
         $.ajax({
             type: 'POST',
             url: "/Comix/DeletePage",
-            data: { id: $(this).parent().attr("id"), comixId: $scope.id },
+            data: { id: $(this).parent().attr("id"), comixId: $("#page").attr("data-id") },
             success: function (data) { }
         });
         var id = $(this).parent().attr("id");

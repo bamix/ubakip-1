@@ -326,7 +326,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Error404.cshtml" />
     <Content Include="Views\Comix\List.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\Comix\MyComixes.cshtml" />
+=======
+    <Content Include="Views\UserInfo\Edit.cshtml" />
+>>>>>>> 305fb4c09f1f69fab00900089d3717f1754f112f
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
