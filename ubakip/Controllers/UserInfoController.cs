@@ -52,13 +52,8 @@ namespace ubakip.Controllers
                 else
                     author.User.FirstName = name;
 
-                /*Photo*/
-                if (photo == null)
-                {
-                    author.User.Photo = "http://res.cloudinary.com/ubakip-ru/image/upload/v1463169215/nouser.jpg"; // Blank Picture
-                }
-                else
                     author.User.Photo = photo;
+
                 /*About*/
                 if (userinfoes != null && userinfoes.About != null)
                     author.UserInfo.About = userinfoes.About;

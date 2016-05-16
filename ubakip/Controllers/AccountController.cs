@@ -97,6 +97,7 @@ namespace ubakip.Controllers
                         user.Login = model.Login;
                         user.Role = 1;
                         user.Lang = "ru";
+                        user.Photo = "http://res.cloudinary.com/ubakip-ru/image/upload/v1463169215/nouser.jpg";
                         user.Theme = "light";
                         db.Users.Add(user);
                         db.SaveChanges();

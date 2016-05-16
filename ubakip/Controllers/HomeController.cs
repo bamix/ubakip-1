@@ -13,78 +13,20 @@ namespace ubakip.Controllers
     [Culture]
     public class HomeController : Controller
     {
+        public int pagesize = 5;
         [AllowAnonymous]
         public ActionResult Index()
         {
-            string preview = "<div class=\"square cell\" id=\"sq1\"><img id=\"0\" src=\"https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg\" class=\"image-cell\" style=\"height: 100%; width: auto; transform: rotate(0deg) scale(1) translate(0%, 0%);\"></div>\n<div class=\"square cell\" id=\"sq2\"><img id=\"1\" src=\"https://pp.vk.me/c630516/v630516851/17d3a/o2M3HScGpQc.jpg\" class=\"image-cell\" style=\"height: 100%; width: auto; transform: rotate(90deg) scale(2) translate(0%, 40%);\"></div>\n<div class=\"rectangle rect cell\" id=\"sq3\"><img class=\"video-btn\" src=\"../../Content/Images/play.png\"><video id=\"2\" class=\"image-cell\" style=\"height: auto; width: 100%; transform: rotate(0deg) scale(2) translate(0%, 0%);\"> <source src=\"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4\" type=\"video/mp4\">   Your browser does not support the video tag.</video></div>\n\n <div class=\"cloud\" id=\"-1\" style=\"height: 50%; width: 50%; transform: translate(0%, 0%);\"><textarea class=\"textarea\" id=\"-t1\" name=\"text\" style=\"-webkit-mask-box-image: url('../../Content/Images/cloud1.png'); mask-border: url('../../Content/Images/cloud1.png') ;\">lol</textarea></div> <div class=\"cloud\" id=\"-2\" style=\"height: 20%; width: 20%; transform: translate(300%, 30%);\"><textarea class=\"textarea\" id=\"-t2\" name=\"text\" style=\"-webkit-mask-box-image: url('../../Content/Images/cloud3.png'); mask-border: url('../../Content/Images/cloud3.png') ;\">kek</textarea></div>";
-            Page page = new Page()
-            {
-                Preview = preview,
-                Background = "000000"
-            };
-            List<Page> pages = new List<Page>();
-            pages.Add(page);
+            List<Comix> comixes = new List<Comix>();
             List<Tag> tags = new List<Tag>();
-            tags.Add(new Tag() { Name = "abc", Count = 10 });
-            tags.Add(new Tag() { Name = "tag2", Count = 13 });
-            tags.Add(new Tag() { Name = "43f", Count = 1 });
-            User author = new User() { Login = "bamix", Photo = "https://pp.vk.me/c630516/v630516851/17d41/3DClFMPdBSk.jpg" };
-            Post post1 = new Post()
+            using (var db = new DataBaseConnection())
             {
-                Comix = new Comix()
-                {
-                    Name = "test name",
-                    Author = author,
-                    Id = 1,
-                    Pages = pages,
-                    DateCreated = DateTime.Now,
-                     Tags = tags,
-                    CoverPage = page
-                },               
-                Rating = 3.2f,
-                UserRating = 2f,         
-                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" }               
-            };
-
-            Post post2 = new Post()
-            {
-                Comix = new Comix()
-                {
-                    Name = "test name",
-                    Author = author,
-                    Id = 1,
-                    Pages = pages,
-                    DateCreated = DateTime.Now,
-                    Tags = tags,
-                    CoverPage = page
-                },
-                Rating = 3.2f,
-                UserRating = 2f,
-                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" }
-            };
-
-            Post post3 = new Post()
-            {
-                Comix = new Comix()
-                {
-                    Name = "test name",
-                    Author = author,
-                    Id = 1,
-                    Pages = pages,
-                    DateCreated = DateTime.Now,
-                    Tags = tags,
-                    CoverPage = page
-                },
-                Rating = 3.2f,
-                UserRating = 2f,
-                MPAARating = new MPAARating() { Photo = "http://1.bp.blogspot.com/-w8rJ7fH6CNQ/TpusFvSdEfI/AAAAAAAAAqw/KiCGps3Cn3s/s1600/pg.png", Description = "PG" }
-            };
-
+                comixes = db.Comixes.Include(c => c.Author).Include(c => c.CoverPage).Include(c => c.Pages).Include(c => c.Tags).ToList();
+                tags = db.Tags.OrderBy(c => c.Count).Take(10).ToList();
+            }
             ComixesRepository comixesRepository = new ComixesRepository();
-            comixesRepository.Posts.Add(post1);
-            comixesRepository.Posts.Add(post2);
-            comixesRepository.Posts.Add(post3);
-            comixesRepository.Tags = tags;
+            comixesRepository.Posts = ComixController.MakePostsFromComixes(comixes);
+            comixesRepository.Tags =tags;
             return View(comixesRepository);
         }
 
